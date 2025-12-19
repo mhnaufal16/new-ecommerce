@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -11,23 +12,10 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        $user = Auth::user();
+        $orders = $user->orders()->latest()->paginate(10);
+        
+        return view('orders.index', compact('orders'));
     }
 
     /**
@@ -35,7 +23,9 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $order = Auth::user()->orders()->with('items.product', 'addresses')->findOrFail($id);
+        
+        return view('orders.show', compact('order'));
     }
 
     /**

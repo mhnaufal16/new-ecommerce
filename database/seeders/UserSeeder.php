@@ -12,8 +12,10 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Clear existing data
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         User::truncate();
         UserAddress::truncate();
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
 
         // Create Admin User
         $admin = User::create([
