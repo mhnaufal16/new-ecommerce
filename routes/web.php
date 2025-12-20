@@ -54,6 +54,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     
+    // Admin Routes
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+        
+        Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        
+        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show']);
+        Route::patch('orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::patch('orders/{order}/payment-status', [\App\Http\Controllers\Admin\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status');
+        Route::patch('orders/{order}/shipping-status', [\App\Http\Controllers\Admin\OrderController::class, 'updateShippingStatus'])->name('orders.update-shipping-status');
+
+        Route::get('reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
+        Route::patch('reviews/{review}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
+        Route::delete('reviews/{review}', [\App\Http\Controllers\Admin\ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+        Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+        
+        Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
+        Route::put('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
+
+        Route::get('analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+    });
+
     // Wishlist Routes
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/add', [WishlistController::class, 'store'])->name('wishlist.add');

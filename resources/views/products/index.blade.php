@@ -334,10 +334,11 @@
                         <div class="card-body d-flex flex-column">
                             <!-- Category -->
                             <div class="mb-2">
-                                @if($product->primaryCategory)
-                                <a href="{{ route('products.index', ['category' => $product->primaryCategory->slug]) }}" 
+                                @if($product->categories->isNotEmpty())
+                                @php $primaryCat = $product->categories->where('pivot.is_primary', true)->first() ?: $product->categories->first(); @endphp
+                                <a href="{{ route('products.index', ['category' => $primaryCat->slug]) }}" 
                                    class="text-muted text-decoration-none small">
-                                    {{ $product->primaryCategory->name }}
+                                    {{ $primaryCat->name }}
                                 </a>
                                 @endif
                             </div>

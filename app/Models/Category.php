@@ -40,15 +40,13 @@ class Category extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_categories')
-                    ->withPivot('is_primary')
-                    ->withTimestamps();
+                    ->withPivot('is_primary');
     }
 
     public function primaryProducts()
     {
         return $this->belongsToMany(Product::class, 'product_categories')
-                    ->wherePivot('is_primary', true)
-                    ->withTimestamps();
+                    ->wherePivot('is_primary', true);
     }
 
     public function couponCategories()

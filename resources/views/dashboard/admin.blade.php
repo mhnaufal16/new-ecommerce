@@ -29,28 +29,34 @@
                            class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <a href="{{ route('admin.products.index') }}" class="list-group-item list-group-item-action">
                             <i class="fas fa-box me-2"></i>Products
                             <span class="badge bg-primary float-end">{{ $total_products }}</span>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <a href="{{ route('admin.brands.index') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-tags me-2"></i>Brands
+                        </a>
+                        <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-folder me-2"></i>Categories
+                        </a>
+                        <a href="{{ route('admin.orders.index') }}" class="list-group-item list-group-item-action">
                             <i class="fas fa-shopping-bag me-2"></i>Orders
                             <span class="badge bg-success float-end">{{ $total_orders }}</span>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action">
                             <i class="fas fa-users me-2"></i>Customers
                             <span class="badge bg-info float-end">{{ $total_users }}</span>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <a href="{{ route('admin.reviews.index') }}" class="list-group-item list-group-item-action">
                             <i class="fas fa-star me-2"></i>Reviews
                             @if($pending_reviews > 0)
                             <span class="badge bg-warning float-end">{{ $pending_reviews }}</span>
                             @endif
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <a href="{{ route('admin.analytics.index') }}" class="list-group-item list-group-item-action">
                             <i class="fas fa-chart-line me-2"></i>Analytics
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <a href="{{ route('admin.settings.index') }}" class="list-group-item list-group-item-action">
                             <i class="fas fa-cog me-2"></i>Settings
                         </a>
                     </div>
@@ -175,7 +181,7 @@
                                                 Rp {{ number_format($order->grand_total, 0, ',', '.') }}
                                             </td>
                                             <td>
-                                                <a href="#" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>
@@ -220,7 +226,7 @@
                                 @endforeach
                             </div>
                             <div class="text-center mt-3">
-                                <a href="#" class="btn btn-sm btn-outline-warning">
+                                <a href="{{ route('admin.products.index') }}" class="btn btn-sm btn-outline-warning">
                                     View All Low Stock
                                 </a>
                             </div>
@@ -251,7 +257,7 @@
                                 <i class="fas fa-comments fa-3x text-info mb-3"></i>
                                 <h4>{{ $pending_reviews }} reviews pending</h4>
                                 <p class="text-muted">Need your approval</p>
-                                <a href="#" class="btn btn-info">
+                                <a href="{{ route('admin.reviews.index') }}" class="btn btn-info">
                                     <i class="fas fa-check me-2"></i>Review Now
                                 </a>
                             </div>
@@ -276,7 +282,7 @@
                             </div>
                             <h5>Add Product</h5>
                             <p class="text-muted">Add new product to store</p>
-                            <a href="#" class="btn btn-primary">
+                            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
                                 Add New
                             </a>
                         </div>
@@ -291,7 +297,7 @@
                             </div>
                             <h5>View Reports</h5>
                             <p class="text-muted">Sales analytics & reports</p>
-                            <a href="#" class="btn btn-success">
+                            <a href="{{ route('admin.analytics.index') }}" class="btn btn-success">
                                 View Reports
                             </a>
                         </div>
@@ -306,7 +312,7 @@
                             </div>
                             <h5>Store Settings</h5>
                             <p class="text-muted">Configure store settings</p>
-                            <a href="#" class="btn btn-info">
+                            <a href="{{ route('admin.settings.index') }}" class="btn btn-info">
                                 Settings
                             </a>
                         </div>

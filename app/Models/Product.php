@@ -54,15 +54,14 @@ class Product extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'product_categories')
-                    ->withPivot('is_primary')
-                    ->withTimestamps();
+                    ->withPivot('is_primary');
     }
 
     public function primaryCategory()
     {
         return $this->belongsToMany(Category::class, 'product_categories')
                     ->wherePivot('is_primary', true)
-                    ->withTimestamps();
+                    ->take(1);
     }
 
     public function images()
@@ -188,6 +187,18 @@ class Product extends Model
         return $query->where('brand_id', $brandId);
     }
 
+    public function getBreadcrumbAttribute()
+    {
+        $primaryCategory = $this->categories()->wherePivot('is_primary', true)->first() 
+            ?: $this->categories()->first();
+            
+        if (!$primaryCategory) {
+            return collect();
+        }
+        
+        return collect($primaryCategory->breadcrumb);
+    }
+
     // CUSTOM METHODS
     public function getAverageRatingAttribute()
     {
@@ -238,13 +249,23 @@ class Product extends Model
     public function getMainImageUrlAttribute()
     {
         $mainImage = $this->mainImage;
-        return $mainImage ? $mainImage->image_url : asset('images/default-product.jpg');
+        if (!$mainImage) return asset('images/placeholder-product.jpg');
+        
+        return filter_var($mainImage->image_url, FILTER_VALIDATE_URL) 
+            ? $mainImage->image_url 
+            : asset('storage/' . $mainImage->image_url);
     }
 
     public function getThumbnailUrlAttribute()
     {
         $mainImage = $this->mainImage;
-        return $mainImage ? ($mainImage->thumbnail_url ?: $mainImage->image_url) : asset('images/default-thumbnail.jpg');
+        if (!$mainImage) return asset('images/placeholder-thumbnail.jpg');
+        
+        $url = $mainImage->thumbnail_url ?: $mainImage->image_url;
+        
+        return filter_var($url, FILTER_VALIDATE_URL) 
+            ? $url 
+            : asset('storage/' . $url);
     }
 
     public function hasVariants()

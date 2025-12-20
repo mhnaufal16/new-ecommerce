@@ -117,8 +117,12 @@ class ProductController extends Controller
         $products = $query->paginate($perPage);
 
         // Get filter data
-        $categories = Category::active()->withCount('products')->get();
-        $brands = Brand::active()->withCount('products')->get();
+        $categories = Category::active()->withCount(['products' => function($query) {
+            $query->active();
+        }])->get();
+        $brands = Brand::active()->withCount(['products' => function($query) {
+            $query->active();
+        }])->get();
         
         $priceRange = [
             'min' => Product::join('prices', function($join) {
