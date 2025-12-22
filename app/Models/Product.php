@@ -297,4 +297,17 @@ class Product extends Model
             ->unique('id')
             ->values();
     }
+    public function canUserReview($userId)
+    {
+        if (!$userId) return false;
+        
+        // Already reviewed?
+        if ($this->reviews()->where('user_id', $userId)->exists()) {
+            return false;
+        }
+        
+        // Has bought the product?
+        $user = User::find($userId);
+        return $user ? $user->hasOrderedProduct($this->id) : false;
+    }
 }

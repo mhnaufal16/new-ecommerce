@@ -57,4 +57,53 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function deleteAddress(Request $request, \App\Models\UserAddress $address): RedirectResponse
+    {
+        if ($address->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $address->delete();
+
+        return Redirect::route('profile.edit')->with('success', 'Alamat berhasil dihapus.');
+    }
+
+    public function storeAddress(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'label' => 'required|string|max:50',
+            'recipient_name' => 'required|string|max:100',
+            'phone' => 'required|string|max:20',
+            'province_id' => 'required|integer',
+            'province_name' => 'required|string',
+            'city_id' => 'required|integer',
+            'city_name' => 'required|string',
+            'district' => 'required|string',
+            'subdistrict' => 'required|string',
+            'postal_code' => 'required|string|max:10',
+            'address' => 'required|string|max:255',
+        ]);
+
+        $user = $request->user();
+        $isFirst = $user->addresses()->count() === 0;
+
+        $user->addresses()->create(array_merge($request->all(), [
+            'user_id' => $user->id,
+            'is_primary' => $isFirst,
+        ]));
+
+        return Redirect::route('profile.edit')->with('success', 'Alamat berhasil ditambahkan.');
+    }
+
+    public function setPrimaryAddress(Request $request, \App\Models\UserAddress $address): RedirectResponse
+    {
+        if ($address->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $address->makePrimary();
+
+        return Redirect::route('profile.edit')->with('success', 'Alamat utama berhasil diperbarui.');
+    }
 }
