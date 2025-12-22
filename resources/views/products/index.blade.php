@@ -615,17 +615,6 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
     });
 });
 
-// Helper functions
-function showToast(type, message) {
-    // Implement toast notification
-    alert(message); // For now, use alert. Replace with proper toast later
-}
-
-function updateCartCount(count) {
-    const cartCountEl = document.querySelector('.cart-count');
-    if (cartCountEl) {
-        cartCountEl.textContent = count;
-    }
-}
+// Helper functions (Removed because now global in app.blade.php)
 </script>
 @endpush

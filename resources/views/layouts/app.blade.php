@@ -107,10 +107,10 @@
                     <!-- Cart -->
                     @auth
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="{{ route('cart.index') }}">
+                        <a class="nav-link position-relative" href="{{ route('cart.index') }}" id="cart-link">
                             <i class="fas fa-shopping-cart"></i>
-                            @if(auth()->user()->cart && auth()->user()->cart->item_count > 0)
-                            <span class="cart-count">{{ auth()->user()->cart->item_count }}</span>
+                            @if(auth()->user()->cart && auth()->user()->cart->total_quantity > 0)
+                            <span class="cart-count">{{ auth()->user()->cart->total_quantity }}</span>
                             @endif
                         </a>
                     </li>
@@ -220,10 +220,15 @@
             const cartCountEl = document.querySelector('.cart-count');
             if (cartCountEl) {
                 cartCountEl.textContent = count;
-            } else {
+                if (count <= 0) {
+                    cartCountEl.style.display = 'none';
+                } else {
+                    cartCountEl.style.display = 'flex';
+                }
+            } else if (count > 0) {
                 // Create cart count badge if doesn't exist
-                const cartLink = document.querySelector('a[href*="cart"]');
-                if (cartLink && count > 0) {
+                const cartLink = document.getElementById('cart-link');
+                if (cartLink) {
                     const badge = document.createElement('span');
                     badge.className = 'cart-count';
                     badge.textContent = count;
@@ -239,6 +244,42 @@
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         });
+
+        // Toast Notification System
+        function showToast(type, message) {
+            const toastContainer = document.getElementById('toast-container') || createToastContainer();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-bg-${type === 'error' ? 'danger' : type} border-0 mb-2`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => toast.remove());
+        }
+
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            container.style.zIndex = '1080';
+            document.body.appendChild(container);
+            return container;
+        }
     </script>
     
     @stack('scripts')

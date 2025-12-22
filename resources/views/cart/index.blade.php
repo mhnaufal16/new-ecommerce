@@ -158,7 +158,7 @@
                     </div>
 
                     <div class="d-grid">
-                        <a href="#" class="btn btn-primary btn-lg @if($cart->validateStock()) disabled @endif">
+                        <a href="{{ route('checkout.index') }}" class="btn btn-primary btn-lg @if($cart->validateStock()) disabled @endif">
                             Checkout Sekarang<i class="fas fa-chevron-right ms-2"></i>
                         </a>
                     </div>

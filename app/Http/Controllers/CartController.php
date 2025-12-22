@@ -45,7 +45,7 @@ class CartController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Produk berhasil ditambahkan ke keranjang.',
-                'cart_count' => $cart->items()->count(),
+                'cart_count' => $cart->total_quantity,
             ]);
         }
 
