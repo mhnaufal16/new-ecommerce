@@ -35,6 +35,44 @@ class ProductImage extends Model
     }
 
     // CUSTOM METHODS
+    public function getUrlAttribute()
+    {
+        $url = $this->image_url;
+        if (!$url) return "https://picsum.photos/seed/" . md5($this->id . 'url') . "/800/800";
+
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+
+        $path = ltrim($url, '/\\');
+        if (str_starts_with($path, 'storage/')) $path = substr($path, 8);
+        
+        if (file_exists(public_path('storage/' . $path))) {
+            return asset('storage/' . $path);
+        }
+
+        return "https://picsum.photos/seed/" . md5($this->id . 'url') . "/800/800";
+    }
+
+    public function getThumbnailAttribute()
+    {
+        $url = $this->thumbnail_url ?: $this->image_url;
+        if (!$url) return "https://picsum.photos/seed/" . md5($this->id . 'thumb') . "/400/400";
+
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+
+        $path = ltrim($url, '/\\');
+        if (str_starts_with($path, 'storage/')) $path = substr($path, 8);
+
+        if (file_exists(public_path('storage/' . $path))) {
+            return asset('storage/' . $path);
+        }
+
+        return "https://picsum.photos/seed/" . md5($this->id . 'thumb') . "/400/400";
+    }
+
     public function setAsMain()
     {
         // Set semua gambar produk ini menjadi non-main

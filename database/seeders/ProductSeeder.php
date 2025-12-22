@@ -15,14 +15,22 @@ class ProductsSeeder extends Seeder
 {
     public function run()
     {
-        // Clear existing data
-        Product::truncate();
-        ProductImage::truncate();
-        Price::truncate();
-        Inventory::truncate();
-        ProductVariant::truncate();
-        ProductAttribute::truncate();
-        ProductAttributeValue::truncate();
+        // Disable foreign key checks
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Clear existing data using delete() instead of truncate() to avoid FK issues
+        \App\Models\Product::query()->delete();
+        \App\Models\ProductImage::query()->delete();
+        \App\Models\Price::query()->delete();
+        \App\Models\Inventory::query()->delete();
+        \App\Models\ProductVariant::query()->delete();
+        \App\Models\ProductAttribute::query()->delete();
+        \App\Models\ProductAttributeValue::query()->delete();
+        \Illuminate\Support\Facades\DB::table('product_categories')->delete();
+        \Illuminate\Support\Facades\DB::table('product_variant_attribute')->delete();
+
+        // Re-enable foreign key checks
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Create product attributes
         $colorAttribute = ProductAttribute::create([
@@ -219,7 +227,7 @@ class ProductsSeeder extends Seeder
             ]);
 
             // Attach color attribute
-            $variant->attributeValues()->attach($colorValueId);
+            $variant->attributeValues()->attach($colorValueId, ['attribute_id' => $colorAttribute->id]);
 
             // Create variant inventory
             Inventory::create([
@@ -247,7 +255,7 @@ class ProductsSeeder extends Seeder
                 ]);
 
                 // Attach size attribute
-                $variant->attributeValues()->attach($sizeValueId);
+                $variant->attributeValues()->attach($sizeValueId, ['attribute_id' => $sizeAttribute->id]);
 
                 // Create variant inventory
                 Inventory::create([

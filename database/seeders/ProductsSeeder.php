@@ -15,14 +15,25 @@ class ProductsSeeder extends Seeder
 {
     public function run()
     {
-        // Clear existing data
-        Product::truncate();
-        ProductImage::truncate();
-        Price::truncate();
-        Inventory::truncate();
-        ProductVariant::truncate();
-        ProductAttribute::truncate();
-        ProductAttributeValue::truncate();
+        // Disable foreign key checks
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // 1. Run Category & Brand seeders first to ensure IDs exist
+        $this->call(CategorySeeder::class);
+        $this->call(BrandSeeder::class);
+
+        // 2. Clear product-related data
+        Product::query()->delete();
+        ProductImage::query()->delete();
+        Price::query()->delete();
+        Inventory::query()->delete();
+        ProductVariant::query()->delete();
+        ProductAttribute::query()->delete();
+        ProductAttributeValue::query()->delete();
+        \Illuminate\Support\Facades\DB::table('product_categories')->delete();
+
+        // Re-enable foreign key checks
+        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Create product attributes
         $colorAttribute = ProductAttribute::create([
@@ -142,20 +153,38 @@ class ProductsSeeder extends Seeder
             ],
         ];
 
+        // Fetch categories and brands to get correct IDs
+        $catSmartphone = \App\Models\Category::where('slug', 'smartphone')->first();
+        $catElektronik = \App\Models\Category::where('slug', 'elektronik-gadget')->first();
+        $catFashionPria = \App\Models\Category::where('slug', 'fashion-pria')->first();
+        $catFashionWanita = \App\Models\Category::where('slug', 'fashion-wanita')->first();
+        $catLaptop = \App\Models\Category::where('slug', 'laptop-komputer')->first();
+        
+        $brandSamsung = \App\Models\Brand::where('slug', 'samsung')->first();
+        $brandErigo = \App\Models\Brand::where('slug', 'erigo')->first();
+        $brandNike = \App\Models\Brand::where('slug', 'nike')->first();
+        $brandPhilips = \App\Models\Brand::where('slug', 'philips')->first();
+
         foreach ($products as $index => $productData) {
             $sku = 'PROD' . str_pad($index + 1, 4, '0', STR_PAD_LEFT);
             
+            // Assign correct brand_id based on original hardcoded intent
+            if ($index == 0) $productData['brand_id'] = $brandSamsung?->id;
+            elseif ($index == 1) $productData['brand_id'] = $brandErigo?->id;
+            elseif ($index == 3) $productData['brand_id'] = $brandNike?->id;
+            elseif ($index == 4) $productData['brand_id'] = $brandPhilips?->id;
+
             $product = Product::create(array_merge($productData, [
                 'sku' => $sku,
             ]));
 
-            // Attach to categories
-            if ($index == 0) {
-                $product->categories()->attach([1, 2]); // Elektronik & Smartphone
-            } elseif ($index == 1) {
-                $product->categories()->attach([6, 7]); // Fashion Pria/Wanita
-            } elseif ($index == 2) {
-                $product->categories()->attach([3]); // Laptop & Komputer
+            // Attach to categories dynamically
+            if ($index == 0 && $catSmartphone && $catElektronik) {
+                $product->categories()->attach([$catSmartphone->id, $catElektronik->id]);
+            } elseif ($index == 1 && $catFashionPria && $catFashionWanita) {
+                $product->categories()->attach([$catFashionPria->id, $catFashionWanita->id]);
+            } elseif ($index == 2 && $catLaptop) {
+                $product->categories()->attach([$catLaptop->id]);
             }
 
             // Create product images
@@ -219,7 +248,7 @@ class ProductsSeeder extends Seeder
             ]);
 
             // Attach color attribute
-            $variant->attributeValues()->attach($colorValueId);
+            $variant->attributeValues()->attach($colorValueId, ['attribute_id' => $colorAttribute->id]);
 
             // Create variant inventory
             Inventory::create([
@@ -247,7 +276,7 @@ class ProductsSeeder extends Seeder
                 ]);
 
                 // Attach size attribute
-                $variant->attributeValues()->attach($sizeValueId);
+                $variant->attributeValues()->attach($sizeValueId, ['attribute_id' => $sizeAttribute->id]);
 
                 // Create variant inventory
                 Inventory::create([

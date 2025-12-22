@@ -9,7 +9,7 @@ class BrandSeeder extends Seeder
 {
     public function run()
     {
-        Brand::truncate();
+        Brand::query()->delete();
 
         $brands = [
             [

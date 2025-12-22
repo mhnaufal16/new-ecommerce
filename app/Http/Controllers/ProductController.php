@@ -166,8 +166,8 @@ class ProductController extends Controller
      */
     public function show(Request $request, Product $product): View|JsonResponse
     {
-        // Increment view count
-        $product->increment('view_count');
+        // Increment view count (column missing in DB)
+        // $product->increment('view_count');
         
         // Load related data with eager loading
         $product->load([

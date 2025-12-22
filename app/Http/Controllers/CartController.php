@@ -20,9 +20,13 @@ class CartController extends Controller
         $cart->load('items.product', 'items.variant');
 
         // Update prices for all items in cart to currently active prices
+        // This also automatically removes items whose products have been deleted (orphans)
         foreach ($cart->items as $item) {
             $item->updatePrice();
         }
+
+        // Refresh items after potential deletions
+        $cart->load('items.product', 'items.variant');
 
         return view('cart.index', compact('cart'));
     }

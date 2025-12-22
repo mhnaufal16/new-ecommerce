@@ -248,24 +248,50 @@ class Product extends Model
 
     public function getMainImageUrlAttribute()
     {
-        $mainImage = $this->mainImage;
-        if (!$mainImage) return asset('images/placeholder-product.jpg');
-        
-        return filter_var($mainImage->image_url, FILTER_VALIDATE_URL) 
-            ? $mainImage->image_url 
-            : asset('storage/' . $mainImage->image_url);
+        $image = $this->mainImage ?: $this->images()->first();
+        $url = $image ? $image->image_url : null;
+
+        // 1. If it's a valid remote URL, use it
+        if ($url && filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+
+        // 2. If it's a local path, check if file exists
+        if ($url) {
+            $path = ltrim($url, '/\\');
+            // Remove 'storage/' prefix if it's already there
+            if (str_starts_with($path, 'storage/')) {
+                $path = substr($path, 8);
+            }
+            if (file_exists(public_path('storage/' . $path))) {
+                return asset('storage/' . $path);
+            }
+        }
+
+        // 3. Last resort: Reliable random image based on product name
+        return "https://picsum.photos/seed/" . md5($this->name . 'main') . "/800/800";
     }
 
     public function getThumbnailUrlAttribute()
     {
-        $mainImage = $this->mainImage;
-        if (!$mainImage) return asset('images/placeholder-thumbnail.jpg');
-        
-        $url = $mainImage->thumbnail_url ?: $mainImage->image_url;
-        
-        return filter_var($url, FILTER_VALIDATE_URL) 
-            ? $url 
-            : asset('storage/' . $url);
+        $image = $this->mainImage ?: $this->images()->first();
+        $url = $image ? ($image->thumbnail_url ?: $image->image_url) : null;
+
+        if ($url && filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+
+        if ($url) {
+            $path = ltrim($url, '/\\');
+            if (str_starts_with($path, 'storage/')) {
+                $path = substr($path, 8);
+            }
+            if (file_exists(public_path('storage/' . $path))) {
+                return asset('storage/' . $path);
+            }
+        }
+
+        return "https://picsum.photos/seed/" . md5($this->name . 'thumb') . "/400/400";
     }
 
     public function hasVariants()

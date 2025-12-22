@@ -9,7 +9,7 @@ class CategorySeeder extends Seeder
 {
     public function run()
     {
-        Category::truncate();
+        Category::query()->delete();
 
         // Elektronik & Gadget
         $elektronik = Category::create([

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ProductAttributeValue extends Model
 {
     use HasFactory;
+    public $timestamps = false;
 
     protected $fillable = [
         'attribute_id',

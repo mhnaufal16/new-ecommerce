@@ -1,620 +1,269 @@
 {{-- resources/views/products/index.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Products - ' . config('app.name'))
+@section('title', 'Jelajahi Produk - ' . config('app.name'))
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row">
+<div class="bg-primary bg-opacity-10 py-5 mb-5 rounded-bottom-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0 mb-3">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Beranda</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Produk</li>
+                    </ol>
+                </nav>
+                <h1 class="display-5 fw-bold mb-3">Jelajahi Koleksi Kami</h1>
+                <p class="text-muted lead">Temukan ribuan produk pilihan dengan kualitas terbaik dan promo menarik setiap hari.</p>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block text-center">
+                <i class="fas fa-shopping-bag fa-10x text-primary opacity-10"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
         <!-- Sidebar Filters -->
-        <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">
-                        <i class="fas fa-filter me-2"></i>Filters
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <!-- Search Form -->
-                    <form action="{{ route('products.index') }}" method="GET">
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Search</label>
-                            <div class="input-group">
-                                <input type="text" 
-                                       name="search" 
-                                       class="form-control" 
-                                       placeholder="Search products..."
-                                       value="{{ request('search') }}">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i>
+        <div class="col-lg-3">
+            <div class="sticky-top" style="top: 2rem;">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white py-3 border-0">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-sliders-h me-2 text-primary"></i>Filter Produk</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('products.index') }}" method="GET">
+                            <!-- Category Filter -->
+                            <div class="mb-4">
+                                <label class="label-premium mb-3">Kategori</label>
+                                <div class="list-group list-group-flush rounded-3 border">
+                                    <a href="{{ url()->current() . '?' . http_build_query(request()->except('category', 'page')) }}" 
+                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ !request('category') ? 'active bg-primary border-primary' : '' }}">
+                                        Semua Kategori
+                                    </a>
+                                    @foreach($categories as $category)
+                                        <a href="{{ route('products.index', array_merge(request()->query(), ['category' => $category->slug])) }}" 
+                                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ request('category') == $category->slug ? 'active bg-primary border-primary' : '' }}">
+                                            {{ $category->name }}
+                                            <span class="badge {{ request('category') == $category->slug ? 'bg-white text-primary' : 'bg-light text-muted' }} rounded-pill">{{ $category->products_count }}</span>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Price Range -->
+                            <div class="mb-4">
+                                <label class="label-premium mb-3">Rentang Harga (Rp)</label>
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <input type="number" name="min_price" class="form-control bg-light border-0 shadow-none rounded-3" placeholder="Min" value="{{ request('min_price') }}">
+                                    <span class="text-muted">-</span>
+                                    <input type="number" name="max_price" class="form-control bg-light border-0 shadow-none rounded-3" placeholder="Max" value="{{ request('max_price') }}">
+                                </div>
+                            </div>
+
+                            <!-- Brand Filter -->
+                            @if($brands->count() > 0)
+                            <div class="mb-4">
+                                <label class="label-premium mb-3">Merek</label>
+                                <select name="brand" class="form-select bg-light border-0 shadow-none rounded-3 py-2">
+                                    <option value="">Semua Merek</option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->slug }}" {{ request('brand') == $brand->slug ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endif
+
+                            <!-- Status Filter -->
+                            <div class="mb-4">
+                                <label class="label-premium mb-3">Ketersediaan</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="availability" value="in_stock" id="stockCheck" {{ request('availability') == 'in_stock' ? 'checked' : '' }}>
+                                    <label class="form-check-label small" for="stockCheck">Stok Tersedia</label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary rounded-pill fw-bold py-2 shadow-sm">
+                                    Terapkan Filter <i class="fas fa-check-circle ms-2"></i>
                                 </button>
-                            </div>
-                        </div>
-
-                        <!-- Category Filter -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Categories</label>
-                            <div class="list-group">
-                                <a href="{{ route('products.index') }}" 
-                                   class="list-group-item list-group-item-action {{ !request('category') ? 'active' : '' }}">
-                                    All Categories
+                                <a href="{{ route('products.index') }}" class="btn btn-light rounded-pill fw-bold py-2 text-muted">
+                                    Reset
                                 </a>
-                                @foreach($categories as $category)
-                                    <a href="{{ route('products.index', ['category' => $category->slug]) }}" 
-                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ request('category') == $category->slug ? 'active' : '' }}">
-                                        {{ $category->name }}
-                                        <span class="badge bg-secondary rounded-pill">{{ $category->products_count }}</span>
-                                    </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Promo Banner in Sidebar -->
+                <div class="card border-0 bg-info bg-opacity-10 rounded-4 p-4 text-center">
+                    <i class="fas fa-gift text-info fa-3x mb-3"></i>
+                    <h6 class="fw-bold">Promo Member Baru!</h6>
+                    <p class="small text-muted">Dapatkan diskon 10% untuk pembelian pertama Anda.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Listing -->
+        <div class="col-lg-9">
+            <!-- Toolbar -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body py-2 px-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-2 mb-md-0">
+                            <span class="text-muted small">Menampilkan <strong>{{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }}</strong> dari <strong>{{ $products->total() }}</strong> Produk</span>
+                        </div>
+                        <div class="col-md-6">
+                            <form action="{{ route('products.index') }}" method="GET" id="sortForm" class="d-flex justify-content-md-end align-items-center gap-2">
+                                @foreach(request()->except('sort', 'page') as $key => $value)
+                                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                                 @endforeach
-                            </div>
+                                <span class="text-muted small text-nowrap">Urutkan:</span>
+                                <select name="sort" class="form-select border-0 bg-transparent shadow-none fw-bold" style="width: auto;" onchange="this.form.submit()">
+                                    <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Terbaru</option>
+                                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Harga Terendah</option>
+                                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Harga Tertinggi</option>
+                                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama A-Z</option>
+                                </select>
+                            </form>
                         </div>
-
-                        <!-- Brand Filter -->
-                        @if($brands->count() > 0)
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Brands</label>
-                            <div class="list-group">
-                                <a href="{{ route('products.index') }}" 
-                                   class="list-group-item list-group-item-action {{ !request('brand') ? 'active' : '' }}">
-                                    All Brands
-                                </a>
-                                @foreach($brands as $brand)
-                                    <a href="{{ route('products.index', ['brand' => $brand->slug]) }}" 
-                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ request('brand') == $brand->slug ? 'active' : '' }}">
-                                        {{ $brand->name }}
-                                        <span class="badge bg-secondary rounded-pill">{{ $brand->products_count }}</span>
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                        @endif
-
-                        <!-- Price Range -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Price Range</label>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <input type="number" 
-                                           name="min_price" 
-                                           class="form-control" 
-                                           placeholder="Min" 
-                                           value="{{ request('min_price') }}">
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" 
-                                           name="max_price" 
-                                           class="form-control" 
-                                           placeholder="Max" 
-                                           value="{{ request('max_price') }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Availability -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Availability</label>
-                            <select name="availability" class="form-select">
-                                <option value="">All</option>
-                                <option value="in_stock" {{ request('availability') == 'in_stock' ? 'selected' : '' }}>In Stock</option>
-                                <option value="out_of_stock" {{ request('availability') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
-                            </select>
-                        </div>
-
-                        <!-- Sort By -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Sort By</label>
-                            <select name="sort_by" class="form-select">
-                                <option value="latest" {{ request('sort_by') == 'latest' ? 'selected' : '' }}>Latest</option>
-                                <option value="price_low" {{ request('sort_by') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
-                                <option value="price_high" {{ request('sort_by') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
-                                <option value="name_asc" {{ request('sort_by') == 'name_asc' ? 'selected' : '' }}>Name: A to Z</option>
-                                <option value="name_desc" {{ request('sort_by') == 'name_desc' ? 'selected' : '' }}>Name: Z to A</option>
-                            </select>
-                        </div>
-
-                        <!-- Apply Filters Button -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check me-2"></i>Apply Filters
-                            </button>
-                            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary mt-2">
-                                <i class="fas fa-times me-2"></i>Clear Filters
-                            </a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
-            <!-- Featured Products -->
-            <div class="card shadow-sm mt-4">
-                <div class="card-header bg-white py-3">
-                    <h6 class="mb-0">
-                        <i class="fas fa-star me-2"></i>Featured Products
-                    </h6>
+            <!-- Grid -->
+            @if($products->isEmpty())
+                <div class="card border-0 shadow-sm rounded-4 py-5 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-search fa-4x text-muted opacity-25 mb-4"></i>
+                        <h5>Maaf, Produk Tidak Ditemukan</h5>
+                        <p class="text-muted mb-4">Coba ubah kata kunci pencarian atau filter yang Anda gunakan.</p>
+                        <a href="{{ route('products.index') }}" class="btn btn-primary rounded-pill px-5">Reset Pencarian</a>
+                    </div>
                 </div>
-                <div class="card-body p-0">
-                    @php
-                        $featured = \App\Models\Product::featured()
-                            ->active()
-                            ->with(['mainImage', 'activePrice'])
-                            ->take(3)
-                            ->get();
-                    @endphp
-                    
-                    @foreach($featured as $product)
-                    <div class="p-3 border-bottom">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0">
-                                <img src="{{ $product->thumbnail_url }}" 
-                                     alt="{{ $product->name }}"
-                                     class="rounded" 
-                                     width="60" 
-                                     height="60"
-                                     style="object-fit: cover;">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-1">
-                                    <a href="{{ route('products.show', $product) }}" 
-                                       class="text-decoration-none text-dark">
-                                        {{ \Illuminate\Support\Str::limit($product->name, 30) }}
-                                    </a>
-                                </h6>
-                                <p class="mb-1 text-primary fw-semibold">
-                                    Rp {{ number_format($product->current_price, 0, ',', '.') }}
-                                </p>
-                                @if($product->isInStock())
-                                    <span class="badge bg-success">In Stock</span>
-                                @else
-                                    <span class="badge bg-danger">Out of Stock</span>
+            @else
+                <div class="row g-4">
+                    @foreach($products as $product)
+                    <div class="col-6 col-md-4">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 product-item overflow-hidden">
+                            <div class="position-absolute p-2" style="top:0; right:0; z-index: 5;">
+                                @if($product->is_new)
+                                    <span class="badge bg-success rounded-pill shadow-sm">NEW</span>
                                 @endif
+                            </div>
+                            <div class="overflow-hidden" style="height: 220px;">
+                                <img src="{{ $product->thumbnail_url }}" class="card-img-top h-100 w-100 object-fit-cover transition-all" alt="{{ $product->name }}">
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="text-muted small mb-1">{{ $product->brand ? $product->brand->name : 'No Brand' }}</div>
+                                <h6 class="card-title text-truncate fw-bold mb-2">
+                                    <a href="{{ route('products.show', $product) }}" class="text-dark text-decoration-none hover-primary">{{ $product->name }}</a>
+                                </h6>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="text-warning small me-2">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <span class="text-dark fw-bold">{{ number_format($product->average_rating ?: 0, 1) }}</span>
+                                    </div>
+                                    <span class="text-muted small">({{ $product->review_count }})</span>
+                                </div>
+                                <div class="text-primary fw-bold fs-5 mb-3">Rp {{ number_format($product->current_price, 0, ',', '.') }}</div>
+                            </div>
+                            <div class="card-footer bg-white border-0 p-3 pt-0">
+                                <form action="{{ route('cart.add', $product) }}" method="POST" class="add-to-cart-form">
+                                    @csrf
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-sm rounded-pill py-2 fw-bold">
+                                            <i class="fas fa-cart-plus me-1"></i> Tambah
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
-            </div>
-        </div>
 
-        <!-- Main Content -->
-        <div class="col-lg-9">
-            <!-- Page Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 class="h3 mb-1">Products</h1>
-                    <p class="text-muted mb-0">
-                        Showing {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} of {{ $products->total() }} products
-                    </p>
+                <!-- Pagination -->
+                <div class="mt-5 d-flex justify-content-center">
+                    {{ $products->links() }}
                 </div>
-                <div class="d-flex gap-2">
-                    <!-- View Toggle -->
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-secondary active" id="gridView">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" id="listView">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                    <!-- Per Page Selector -->
-                    <select class="form-select w-auto" id="perPageSelect">
-                        <option value="12" {{ request('per_page', 12) == 12 ? 'selected' : '' }}>12 per page</option>
-                        <option value="24" {{ request('per_page', 12) == 24 ? 'selected' : '' }}>24 per page</option>
-                        <option value="36" {{ request('per_page', 12) == 36 ? 'selected' : '' }}>36 per page</option>
-                        <option value="48" {{ request('per_page', 12) == 48 ? 'selected' : '' }}>48 per page</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Active Filters -->
-            @if(request()->anyFilled(['search', 'category', 'brand', 'min_price', 'max_price', 'availability']))
-            <div class="mb-4">
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="text-muted">Active filters:</span>
-                    
-                    @if(request('search'))
-                    <span class="badge bg-primary d-flex align-items-center">
-                        Search: {{ request('search') }}
-                        <a href="{{ route('products.index', request()->except('search')) }}" 
-                           class="text-white ms-2" style="text-decoration: none;">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </span>
-                    @endif
-
-                    @if(request('category'))
-                    @php $category = $categories->firstWhere('slug', request('category')); @endphp
-                    <span class="badge bg-info d-flex align-items-center">
-                        Category: {{ $category->name ?? request('category') }}
-                        <a href="{{ route('products.index', request()->except('category')) }}" 
-                           class="text-white ms-2" style="text-decoration: none;">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </span>
-                    @endif
-
-                    @if(request('brand'))
-                    @php $brand = $brands->firstWhere('slug', request('brand')); @endphp
-                    <span class="badge bg-warning d-flex align-items-center">
-                        Brand: {{ $brand->name ?? request('brand') }}
-                        <a href="{{ route('products.index', request()->except('brand')) }}" 
-                           class="text-dark ms-2" style="text-decoration: none;">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </span>
-                    @endif
-
-                    @if(request('min_price') || request('max_price'))
-                    <span class="badge bg-success d-flex align-items-center">
-                        Price: 
-                        @if(request('min_price'))Rp {{ number_format(request('min_price'), 0, ',', '.') }}@endif
-                        @if(request('min_price') && request('max_price')) - @endif
-                        @if(request('max_price'))Rp {{ number_format(request('max_price'), 0, ',', '.') }}@endif
-                        <a href="{{ route('products.index', request()->except(['min_price', 'max_price'])) }}" 
-                           class="text-white ms-2" style="text-decoration: none;">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </span>
-                    @endif
-
-                    @if(request('availability'))
-                    <span class="badge bg-dark d-flex align-items-center">
-                        {{ ucfirst(str_replace('_', ' ', request('availability'))) }}
-                        <a href="{{ route('products.index', request()->except('availability')) }}" 
-                           class="text-white ms-2" style="text-decoration: none;">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </span>
-                    @endif
-
-                    <a href="{{ route('products.index') }}" class="btn btn-outline-danger btn-sm">
-                        Clear All
-                    </a>
-                </div>
-            </div>
-            @endif
-
-            <!-- Products Grid -->
-            <div id="productsGrid" class="row">
-                @forelse($products as $product)
-                <div class="col-xl-3 col-lg-4 col-md-6 mb-4 product-card-col">
-                    <div class="card product-card h-100">
-                        <!-- Product Badges -->
-                        <div class="product-badges">
-                            @if($product->is_featured)
-                                <span class="badge bg-warning">Featured</span>
-                            @endif
-                            @if($product->is_new)
-                                <span class="badge bg-success">New</span>
-                            @endif
-                            @if($product->activePrice && $product->activePrice->isSaleActive())
-                                <span class="badge bg-danger">Sale</span>
-                            @endif
-                        </div>
-
-                        <!-- Product Image -->
-                        <div class="product-image position-relative">
-                            <a href="{{ route('products.show', $product) }}">
-                                <img src="{{ $product->thumbnail_url ?: asset('images/default-product.jpg') }}" 
-                                     class="card-img-top" 
-                                     alt="{{ $product->name }}"
-                                     loading="lazy">
-                            </a>
-                            
-                            <!-- Quick Actions -->
-                            <div class="product-actions">
-                                <button class="btn btn-sm btn-light wishlist-btn" 
-                                        data-product-id="{{ $product->id }}"
-                                        title="Add to Wishlist">
-                                    <i class="far fa-heart"></i>
-                                </button>
-                                <button class="btn btn-sm btn-light compare-btn" 
-                                        data-product-id="{{ $product->id }}"
-                                        title="Compare">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </button>
-                            </div>
-
-                            <!-- Add to Cart Button -->
-                            <div class="product-add-to-cart">
-                                @if($product->isInStock())
-                                <button class="btn btn-primary btn-sm add-to-cart-btn" 
-                                        data-product-id="{{ $product->id }}"
-                                        data-product-name="{{ $product->name }}">
-                                    <i class="fas fa-shopping-cart me-1"></i> Add to Cart
-                                </button>
-                                @else
-                                <button class="btn btn-outline-secondary btn-sm" disabled>
-                                    <i class="fas fa-ban me-1"></i> Out of Stock
-                                </button>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Product Body -->
-                        <div class="card-body d-flex flex-column">
-                            <!-- Category -->
-                            <div class="mb-2">
-                                @if($product->categories->isNotEmpty())
-                                @php $primaryCat = $product->categories->where('pivot.is_primary', true)->first() ?: $product->categories->first(); @endphp
-                                <a href="{{ route('products.index', ['category' => $primaryCat->slug]) }}" 
-                                   class="text-muted text-decoration-none small">
-                                    {{ $primaryCat->name }}
-                                </a>
-                                @endif
-                            </div>
-
-                            <!-- Product Name -->
-                            <h5 class="card-title">
-                                <a href="{{ route('products.show', $product) }}" 
-                                   class="text-decoration-none text-dark">
-                                    {{ \Illuminate\Support\Str::limit($product->name, 50) }}
-                                </a>
-                            </h5>
-
-                            <!-- Brand -->
-                            @if($product->brand)
-                            <p class="small text-muted mb-2">
-                                <a href="{{ route('products.index', ['brand' => $product->brand->slug]) }}" 
-                                   class="text-decoration-none">
-                                    {{ $product->brand->name }}
-                                </a>
-                            </p>
-                            @endif
-
-                            <!-- Rating -->
-                            <div class="mb-2">
-                                @php
-                                    $avgRating = $product->approved_reviews_avg_rating ?? 0;
-                                    $reviewCount = $product->approved_reviews_count ?? 0;
-                                @endphp
-                                <div class="d-flex align-items-center">
-                                    <div class="text-warning">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            @if($i <= floor($avgRating))
-                                                <i class="fas fa-star"></i>
-                                            @elseif($i - 0.5 <= $avgRating)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @else
-                                                <i class="far fa-star"></i>
-                                            @endif
-                                        @endfor
-                                    </div>
-                                    <small class="text-muted ms-2">({{ $reviewCount }})</small>
-                                </div>
-                            </div>
-
-                            <!-- Price -->
-                            <div class="mt-auto">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        @if($product->activePrice && $product->activePrice->isSaleActive())
-                                            <span class="text-danger h5 mb-0">
-                                                Rp {{ number_format($product->activePrice->sale_price, 0, ',', '.') }}
-                                            </span>
-                                            <small class="text-muted text-decoration-line-through ms-2">
-                                                Rp {{ number_format($product->activePrice->base_price, 0, ',', '.') }}
-                                            </small>
-                                            <div class="badge bg-danger mt-1">
-                                                -{{ $product->activePrice->discount_percentage }}%
-                                            </div>
-                                        @else
-                                            <span class="text-primary h5 mb-0">
-                                                Rp {{ number_format($product->current_price, 0, ',', '.') }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                    
-                                    <!-- Stock Status -->
-                                    <div>
-                                        @if($product->isInStock())
-                                            <span class="badge bg-success">In Stock</span>
-                                        @else
-                                            <span class="badge bg-danger">Out of Stock</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @empty
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body text-center py-5">
-                            <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
-                            <h3>No products found</h3>
-                            <p class="text-muted">Try adjusting your search or filter to find what you're looking for.</p>
-                            <a href="{{ route('products.index') }}" class="btn btn-primary">
-                                <i class="fas fa-redo me-2"></i>Reset Filters
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endforelse
-            </div>
-
-            <!-- Pagination -->
-            @if($products->hasPages())
-            <div class="mt-4">
-                {{ $products->withQueryString()->links() }}
-            </div>
             @endif
         </div>
     </div>
 </div>
-@endsection
 
-@push('styles')
 <style>
-.product-card {
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-.product-card:hover {
-    border-color: #007bff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    transform: translateY(-5px);
-}
-.product-badges {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-}
-.product-badges .badge {
-    margin-right: 5px;
-}
-.product-image {
-    overflow: hidden;
-    position: relative;
-    height: 200px;
-}
-.product-image img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-.product-card:hover .product-image img {
-    transform: scale(1.05);
-}
-.product-actions {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-}
-.product-card:hover .product-actions {
-    opacity: 1;
-}
-.product-add-to-cart {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 10px;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-}
-.product-card:hover .product-add-to-cart {
-    transform: translateY(0);
-}
-.list-view .product-card-col {
-    flex: 0 0 100%;
-    max-width: 100%;
-}
-.list-view .product-card {
-    flex-direction: row;
-    height: auto;
-}
-.list-view .product-image {
-    flex: 0 0 200px;
-    height: 200px;
-}
-.list-view .card-body {
-    flex: 1;
-}
+    .rounded-bottom-5 { border-radius: 0 0 3rem 3rem !important; }
+    .label-premium { 
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6c757d;
+        display: block;
+    }
+    .hover-primary:hover { color: var(--primary-color) !important; }
+    .product-item { transition: transform 0.3s; }
+    .product-item:hover { transform: translateY(-8px); }
+    .product-item:hover img { transform: scale(1.08); }
+    .object-fit-cover { object-fit: cover; }
+    .transition-all { transition: all 0.3s ease; }
+    
+    /* Custom pagination styles */
+    .pagination { gap: 5px; }
+    .page-item .page-link { 
+        border: none;
+        border-radius: 10px !important;
+        color: #555;
+        font-weight: 600;
+        padding: 10px 18px;
+    }
+    .page-item.active .page-link {
+        background-color: var(--primary-color);
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    }
 </style>
-@endpush
+@endsection
 
 @push('scripts')
 <script>
-// View Toggle
-document.getElementById('gridView').addEventListener('click', function() {
-    document.getElementById('productsGrid').classList.remove('list-view');
-    this.classList.add('active');
-    document.getElementById('listView').classList.remove('active');
-});
-
-document.getElementById('listView').addEventListener('click', function() {
-    document.getElementById('productsGrid').classList.add('list-view');
-    this.classList.add('active');
-    document.getElementById('gridView').classList.remove('active');
-});
-
-// Per Page Selector
-document.getElementById('perPageSelect').addEventListener('change', function() {
-    const url = new URL(window.location.href);
-    url.searchParams.set('per_page', this.value);
-    window.location.href = url.toString();
-});
-
-// Add to Cart
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const productId = this.dataset.productId;
-        const productName = this.dataset.productName;
-        
-        // Show loading state
-        const originalText = this.innerHTML;
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-        this.disabled = true;
-        
-        // Send AJAX request
-        fetch('/cart/add/' + productId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({
-                quantity: 1
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Show success message
-                showToast('success', `"${productName}" added to cart!`);
+    document.addEventListener('DOMContentLoaded', function() {
+        // AJAX Add to cart for product listing
+        document.querySelectorAll('.add-to-cart-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const btn = this.querySelector('button');
+                const originalContent = btn.innerHTML;
                 
-                // Update cart count
-                updateCartCount(data.cart_count);
-            } else {
-                showToast('error', data.message || 'Failed to add to cart');
-            }
-        })
-        .catch(error => {
-            showToast('error', 'An error occurred');
-            console.error('Error:', error);
-        })
-        .finally(() => {
-            // Restore button state
-            this.innerHTML = originalText;
-            this.disabled = false;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new FormData(this)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        showToast('success', data.message);
+                        if(typeof updateCartCount === 'function') updateCartCount(data.cart_count);
+                    } else {
+                        showToast('error', data.message);
+                    }
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                });
+            });
         });
     });
-});
-
-// Wishlist button
-document.querySelectorAll('.wishlist-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const productId = this.dataset.productId;
-        
-        fetch('/wishlist/toggle/' + productId, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.in_wishlist) {
-                this.innerHTML = '<i class="fas fa-heart text-danger"></i>';
-                showToast('success', 'Added to wishlist');
-            } else {
-                this.innerHTML = '<i class="far fa-heart"></i>';
-                showToast('info', 'Removed from wishlist');
-            }
-        });
-    });
-});
-
-// Helper functions (Removed because now global in app.blade.php)
 </script>
 @endpush

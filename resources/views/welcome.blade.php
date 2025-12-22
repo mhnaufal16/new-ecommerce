@@ -1,202 +1,181 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+{{-- resources/views/welcome.blade.php --}}
+@extends('layouts.app')
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        body {
-            font-family: 'Figtree', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-        .welcome-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-        .welcome-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-        .welcome-body {
-            padding: 40px;
-        }
-        .feature-icon {
-            font-size: 3rem;
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            padding: 12px 30px;
-            font-weight: 600;
-        }
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8">
-                <div class="welcome-card">
-                    <!-- Header -->
-                    <div class="welcome-header">
-                        <h1 class="display-4 fw-bold mb-3">
-                            <i class="fas fa-store me-2"></i>{{ config('app.name', 'E-Commerce Store') }}
-                        </h1>
-                        <p class="lead mb-0">Your complete e-commerce solution built with Laravel</p>
-                    </div>
-
-                    <!-- Body -->
-                    <div class="welcome-body">
-                        <div class="row mb-5">
-                            <div class="col-md-6 mb-4">
-                                <div class="text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </div>
-                                    <h4>Product Catalog</h4>
-                                    <p class="text-muted">Browse thousands of products with advanced filtering</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-credit-card"></i>
-                                    </div>
-                                    <h4>Secure Checkout</h4>
-                                    <p class="text-muted">Multiple payment methods with secure transactions</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-truck"></i>
-                                    </div>
-                                    <h4>Fast Shipping</h4>
-                                    <p class="text-muted">Integrated with major shipping providers in Indonesia</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                    <h4>Admin Dashboard</h4>
-                                    <p class="text-muted">Complete management system for store owners</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="text-center">
-                            <div class="d-grid gap-3 d-md-block">
-                                <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg me-md-3 mb-3">
-                                    <i class="fas fa-shopping-bag me-2"></i>Browse Products
-                                </a>
-                                
-                                @auth
-                                    <a href="{{ route('dashboard') }}" class="btn btn-outline-primary btn-lg mb-3">
-                                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                                    </a>
-                                @else
-                                    <a href="{{ route('login') }}" class="btn btn-outline-primary btn-lg me-md-3 mb-3">
-                                        <i class="fas fa-sign-in-alt me-2"></i>Login
-                                    </a>
-                                    <a href="{{ route('register') }}" class="btn btn-outline-success btn-lg mb-3">
-                                        <i class="fas fa-user-plus me-2"></i>Register
-                                    </a>
-                                @endauth
-                            </div>
-                            
-                            <!-- Demo Credentials -->
-                            @guest
-                            <div class="mt-4 p-3 bg-light rounded">
-                                <p class="mb-2 text-muted">
-                                    <strong>Demo Credentials:</strong>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="mb-1">
-                                            <i class="fas fa-user-shield me-2 text-primary"></i>
-                                            Admin: <code>admin@tokoecommerce.com</code>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p class="mb-1">
-                                            <i class="fas fa-key me-2 text-primary"></i>
-                                            Password: <code>password123</code>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endguest
-                        </div>
-
-                        <!-- Quick Stats -->
-                        <div class="row mt-5 pt-4 border-top">
-                            @php
-                                use App\Models\Product;
-                                use App\Models\User;
-                                use App\Models\Order;
-                                
-                                $totalProducts = Product::count();
-                                $totalUsers = User::count();
-                                $totalOrders = Order::count();
-                            @endphp
-                            <div class="col-md-4 text-center">
-                                <h2 class="text-primary">{{ $totalProducts }}</h2>
-                                <p class="text-muted">Products Available</p>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <h2 class="text-success">{{ $totalUsers }}</h2>
-                                <p class="text-muted">Registered Users</p>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <h2 class="text-warning">{{ $totalOrders }}</h2>
-                                <p class="text-muted">Orders Processed</p>
-                            </div>
-                        </div>
-                    </div>
+@section('content')
+<!-- Hero Section -->
+<div class="hero-section position-relative overflow-hidden mb-5" style="background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%); color: white; padding: 100px 0; border-radius: 0 0 5rem 5rem;">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <span class="badge bg-white text-primary rounded-pill px-3 py-2 mb-3 fw-bold shadow-sm">KOLEKSI TERBARU 2025</span>
+                <h1 class="display-3 fw-bold mb-4">Temukan Gaya Hidup Modern Anda Disini</h1>
+                <p class="lead mb-5 opacity-75">Dapatkan produk-produk pilihan dengan kualitas terbaik dan harga yang kompetitif. Belanja aman, nyaman, dan cepat.</p>
+                <div class="d-flex gap-3">
+                    <a href="{{ route('products.index') }}" class="btn btn-white btn-lg rounded-pill px-5 fw-bold shadow">
+                        Mulai Belanja <i class="fas fa-shopping-bag ms-2"></i>
+                    </a>
+                    <a href="#featured" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">
+                        Lihat Promo
+                    </a>
                 </div>
-
-                <!-- Footer -->
-                <div class="text-center mt-4">
-                    <p class="text-white">
-                        &copy; {{ date('Y') }} {{ config('app.name', 'E-Commerce Store') }}. 
-                        Built with <i class="fas fa-heart text-danger"></i> using Laravel.
-                    </p>
-                    <div class="mt-2">
-                        <a href="#" class="text-white me-3"><i class="fab fa-github"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-facebook"></i></a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="position-relative d-inline-block">
+                    <img src="https://img.freepik.com/free-photo/pretty-young-stylish-woman-holding-shopping-bags_23-2149101150.jpg?t=st=1710000000~exp=1710003600~hmac=55555" 
+                         alt="Hero Image" class="img-fluid rounded-4 shadow-lg mb-4" style="max-height: 500px; object-fit: cover; border: 10px solid rgba(255,255,255,0.1);">
+                    <div class="position-absolute bottom-0 start-0 bg-white p-3 rounded-4 shadow-lg text-dark m-4 d-none d-md-block">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success bg-opacity-10 p-2 rounded-circle me-3">
+                                <i class="fas fa-check text-success"></i>
+                            </div>
+                            <div class="text-start">
+                                <div class="fw-bold">100% Original</div>
+                                <div class="small text-muted">Jaminan Barang Asli</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Floating Abstract Shapes -->
+    <div class="position-absolute top-0 end-0 p-5 mt-5 opacity-25">
+        <i class="fas fa-circle fa-10x text-white"></i>
+    </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<div class="container py-5">
+    <!-- Featured Categories -->
+    <div class="row mb-5 gy-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white border-0 shadow-sm rounded-4 overflow-hidden h-100 p-4 position-relative">
+                <div class="z-index-1">
+                    <h4 class="fw-bold">Elektronik</h4>
+                    <p class="opacity-75">Gadget & Perangkat Pintar</p>
+                    <a href="{{ route('products.index', ['category' => 'electronics']) }}" class="btn btn-white btn-sm rounded-pill px-3 mt-3 fw-bold">Jelajahi <i class="fas fa-chevron-right ms-1 small"></i></a>
+                </div>
+                <i class="fas fa-laptop position-absolute bottom-0 end-0 m-3 opacity-25 fa-5x"></i>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white border-0 shadow-sm rounded-4 overflow-hidden h-100 p-4 position-relative">
+                <div class="z-index-1">
+                    <h4 class="fw-bold">Fashion</h4>
+                    <p class="opacity-75">Pakaian & Aksesoris</p>
+                    <a href="{{ route('products.index', ['category' => 'fashion']) }}" class="btn btn-white btn-sm rounded-pill px-3 mt-3 fw-bold">Jelajahi <i class="fas fa-chevron-right ms-1 small"></i></a>
+                </div>
+                <i class="fas fa-tshirt position-absolute bottom-0 end-0 m-3 opacity-25 fa-5x"></i>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark border-0 shadow-sm rounded-4 overflow-hidden h-100 p-4 position-relative">
+                <div class="z-index-1">
+                    <h4 class="fw-bold">Kecantikan</h4>
+                    <p class="opacity-75">Perawatan & Kosmetik</p>
+                    <a href="{{ route('products.index', ['category' => 'beauty']) }}" class="btn btn-dark btn-sm rounded-pill px-3 mt-3 fw-bold text-white">Jelajahi <i class="fas fa-chevron-right ms-1 small"></i></a>
+                </div>
+                <i class="fas fa-magic position-absolute bottom-0 end-0 m-3 opacity-25 fa-5x"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <div id="featured" class="row mb-5 g-4 shadow-sm py-5 px-3 rounded-4 bg-white border">
+        <div class="col-12 mb-2">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <h2 class="fw-bold mb-0">Produk Unggulan</h2>
+                    <p class="text-muted mb-0">Rekomendasi terbaik hanya untuk Anda</p>
+                </div>
+                <a href="{{ route('products.index') }}" class="btn btn-outline-primary rounded-pill px-4">Lihat Semua <i class="fas fa-arrow-right ms-2"></i></a>
+            </div>
+        </div>
+        @php
+            $featuredProducts = \App\Models\Product::active()->featured()->take(4)->get();
+        @endphp
+        @forelse($featuredProducts as $product)
+        <div class="col-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm rounded-4 product-item">
+                <div class="position-absolute p-2" style="top:0; right:0; z-index: 10;">
+                    <span class="badge bg-danger rounded-pill shadow-sm">HOT</span>
+                </div>
+                <div class="overflow-hidden rounded-t-4" style="height: 250px;">
+                    <img src="{{ $product->thumbnail_url }}" class="card-img-top h-100 w-100 object-fit-cover transition-all" alt="{{ $product->name }}">
+                </div>
+                <div class="card-body p-3">
+                    <div class="text-muted small mb-1">{{ $product->brand ? $product->brand->name : 'No Brand' }}</div>
+                    <h6 class="card-title text-truncate fw-bold mb-2">
+                        <a href="{{ route('products.show', $product) }}" class="text-dark text-decoration-none">{{ $product->name }}</a>
+                    </h6>
+                    <div class="text-primary fw-bold fs-5 mb-3">Rp {{ number_format($product->current_price, 0, ',', '.') }}</div>
+                    <div class="d-grid">
+                        <a href="{{ route('products.show', $product) }}" class="btn btn-outline-primary btn-sm rounded-pill py-2 fw-bold">Detail Produk</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @empty
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Produk unggulan belum tersedia.</p>
+            </div>
+        @endforelse
+    </div>
+
+    <!-- Features Section -->
+    <div class="row g-4 py-5 mb-5 text-center">
+        <div class="col-md-3">
+            <div class="p-4 rounded-4 bg-white shadow-sm border h-100 transition-all hover-up">
+                <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                    <i class="fas fa-truck text-primary fa-2x"></i>
+                </div>
+                <h6 class="fw-bold">Gratis Ongkir</h6>
+                <p class="text-muted small mb-0">Untuk pesanan di atas Rp 200rb</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-4 rounded-4 bg-white shadow-sm border h-100 transition-all hover-up">
+                <div class="bg-success bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                    <i class="fas fa-shield-alt text-success fa-2x"></i>
+                </div>
+                <h6 class="fw-bold">Pembayaran Aman</h6>
+                <p class="text-muted small mb-0">100% perlindungan transaksi</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-4 rounded-4 bg-white shadow-sm border h-100 transition-all hover-up">
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                    <i class="fas fa-undo text-info fa-2x"></i>
+                </div>
+                <h6 class="fw-bold">Mudah Dikembalikan</h6>
+                <p class="text-muted small mb-0">Garansi 7 hari uang kembali</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-4 rounded-4 bg-white shadow-sm border h-100 transition-all hover-up">
+                <div class="bg-warning bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                    <i class="fas fa-headset text-warning fa-2x"></i>
+                </div>
+                <h6 class="fw-bold">Dukungan 24/7</h6>
+                <p class="text-muted small mb-0">Kami siap membantu kapanpun</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-white {
+        background: white;
+        color: var(--primary-color);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .btn-white:hover {
+        background: #f8f9fa;
+        transform: translateY(-2px);
+    }
+    .object-fit-cover { object-fit: cover; }
+    .transition-all { transition: all 0.3s ease; }
+    .product-item:hover img { transform: scale(1.08); }
+    .hover-up:hover { transform: translateY(-10px); }
+    .z-index-1 { position: relative; z-index: 1; }
+</style>
+@endsection

@@ -22,40 +22,91 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <style>
-        .sidebar {
-            min-height: calc(100vh - 56px);
-            background: #f8f9fa;
-            border-right: 1px solid #dee2e6;
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --border-radius-lg: 1.25rem;
+            --shadow-premium: 0 1rem 3rem rgba(0,0,0,.08);
         }
-        .sidebar .nav-link {
-            color: #333;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 5px;
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            background-color: #fcfcfc;
+            color: #2b2b2b;
         }
-        .sidebar .nav-link:hover {
-            background: #e9ecef;
+
+        .navbar {
+            padding: 1rem 0;
+            transition: all 0.3s;
         }
-        .sidebar .nav-link.active {
-            background: #007bff;
-            color: white;
-        }
-        .navbar-brand {
+
+        .rounded-4 { border-radius: var(--border-radius-lg) !important; }
+        .shadow-premium { box-shadow: var(--shadow-premium) !important; }
+        
+        .btn-primary {
+            border-radius: 50rem;
+            padding: 0.6rem 1.5rem;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.3);
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            transition: all 0.3s;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #555 !important;
+            padding: 0.5rem 1rem !important;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
         .cart-count {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #dc3545;
+            top: 2px;
+            right: 0;
+            background: #ff4d4d;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
+            min-width: 18px;
+            height: 18px;
+            font-size: 10px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid white;
+        }
+
+        .search-container {
+            background: #f1f3f5;
+            border-radius: 50rem;
+            padding: 2px 5px;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            box-shadow: none !important;
+        }
+
+        footer {
+            background: #1a1a1a !important;
+            border-radius: 2rem 2rem 0 0;
+            margin-top: 5rem;
         }
     </style>
 </head>
@@ -93,11 +144,11 @@
                     </li>
                 </ul>
                 <!-- Search Form -->
-                <form class="d-flex me-3" action="{{ route('products.index') }}" method="GET">
-                    <div class="input-group" style="width: 300px;">
-                        <input type="text" name="search" class="form-control" placeholder="Search products..." 
+                <form class="d-flex mx-auto" action="{{ route('products.index') }}" method="GET">
+                    <div class="search-container d-flex align-items-center" style="min-width: 350px;">
+                        <input type="text" name="search" class="form-control px-3" placeholder="Apa yang Anda cari hari ini?" 
                                value="{{ request('search') }}">
-                        <button class="btn btn-outline-primary" type="submit">
+                        <button class="btn btn-primary rounded-circle p-2 ms-1" type="submit" style="width: 38px; height: 38px;">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>

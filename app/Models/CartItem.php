@@ -107,6 +107,12 @@ class CartItem extends Model
 
     public function updatePrice()
     {
+        // If it's a variant but variant is gone, or it's a simple product but product is gone
+        if (($this->variant_id && !$this->variant) || (!$this->variant_id && !$this->product)) {
+            $this->delete();
+            return null;
+        }
+
         $newPrice = $this->variant 
             ? $this->variant->current_price
             : $this->product->current_price;
