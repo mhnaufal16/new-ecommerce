@@ -9,8 +9,9 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -31,7 +32,7 @@
         }
 
         body {
-            font-family: 'Figtree', sans-serif;
+            font-family: 'Poppins', 'Figtree', sans-serif;
             background-color: #fcfcfc;
             color: #2b2b2b;
         }
@@ -39,6 +40,35 @@
         .navbar {
             padding: 1rem 0;
             transition: all 0.3s;
+        }
+
+        /* Logo / Brand styling */
+        .navbar-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.05rem;
+        }
+
+        .site-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(13,110,253,1), rgba(0,67,168,1));
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(13,110,253,0.18);
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            color: #111827;
+            font-size: 1rem;
+            letter-spacing: -0.2px;
         }
 
         .rounded-4 { border-radius: var(--border-radius-lg) !important; }
@@ -73,6 +103,7 @@
         .nav-link.active {
             color: var(--primary-color) !important;
         }
+        
 
         .cart-count {
             position: absolute;
@@ -115,7 +146,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-store me-2"></i>{{ config('app.name', 'E-Commerce') }}
+                <span class="site-logo">
+                    <i class="fas fa-store fa-lg"></i>
+                </span>
+                <span class="brand-text">{{ config('app.name', 'E-Commerce') }}</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
