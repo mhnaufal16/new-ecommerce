@@ -91,7 +91,20 @@
             </div>
         </div>
         @php
+            // Prefer explicitly featured products, but fall back to in-stock active products
             $featuredProducts = \App\Models\Product::active()->featured()->take(4)->get();
+
+            if ($featuredProducts->count() < 4) {
+                $needed = 4 - $featuredProducts->count();
+                $fallback = \App\Models\Product::active()->inStock()
+                    ->when($featuredProducts->isNotEmpty(), function ($q) use ($featuredProducts) {
+                        $q->whereNotIn('id', $featuredProducts->pluck('id'));
+                    })
+                    ->take($needed)
+                    ->get();
+
+                $featuredProducts = $featuredProducts->concat($fallback);
+            }
         @endphp
         @forelse($featuredProducts as $product)
         <div class="col-6 col-lg-3">
