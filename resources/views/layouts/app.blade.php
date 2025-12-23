@@ -149,6 +149,13 @@
 
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; margin-top: 1.25rem; }
 
+        /* Ensure all footer text is readable against dark background */
+        footer, footer * { color: #cbd5e1 !important; }
+        footer h5 { color: #f8fafc !important; }
+        footer .brand-text { color: #f8fafc !important; }
+        footer .footer-links a { color: #cbd5e1 !important; }
+        footer .footer-links a:hover { color: #ffffff !important; }
+
         .nav-link {
             font-weight: 500;
             color: #555 !important;
