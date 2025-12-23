@@ -128,6 +128,19 @@
 
         .footer-brand .small { color: #94a3b8; }
 
+        /* Ensure brand text is readable in footer */
+        footer .brand-text {
+            color: #e6eef8; /* light text for contrast */
+            font-weight: 600;
+        }
+
+        footer .site-logo {
+            width:44px; height:44px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
+            background: linear-gradient(135deg,#0d6efd,#0043a8);
+            box-shadow: 0 8px 30px rgba(13,110,253,0.25);
+            color: #ffffff;
+        }
+
         .footer-links a { display: block; color: #cbd5e1; text-decoration: none; margin-bottom: 0.35rem; }
         .footer-links a:hover { color: white; }
 
