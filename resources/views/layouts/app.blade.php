@@ -267,8 +267,16 @@
                     </li>
                     @endauth
                     
-                    <!-- User Dropdown -->
+                    <!-- User Dropdown + Logout button -->
                     @auth
+                    <li class="nav-item me-2 d-none d-md-block">
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill">
+                                <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            </button>
+                        </form>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
                            data-bs-toggle="dropdown">
@@ -291,7 +299,7 @@
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li>
+                            <li class="d-md-none">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="dropdown-item">
