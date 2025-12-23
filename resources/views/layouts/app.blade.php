@@ -91,6 +91,46 @@
             border: none;
             border-radius: var(--border-radius-lg);
             box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+
+            /* Feature card tweaks to match brand weight */
+            .feature-card {
+                border-radius: 1rem;
+                padding: 1.5rem;
+                box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+                transition: transform .25s ease, box-shadow .25s ease;
+                background: #fff;
+            }
+
+            .feature-card h6 { font-weight: 700; color: #111827; }
+            .feature-card p { color: #6b7280; }
+
+            .feature-icon {
+                width: 56px; height: 56px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
+                background: rgba(13,110,253,0.08); color: var(--primary-color); font-size: 1.4rem;
+                box-shadow: 0 6px 18px rgba(13,110,253,0.06);
+            }
+
+            /* Footer improvements */
+            footer {
+                background: #0f1720 !important;
+                border-radius: 1.5rem 1.5rem 0 0;
+                margin-top: 5rem;
+                color: #cbd5e1;
+                padding-top: 3rem;
+                padding-bottom: 2.5rem;
+            }
+
+            .footer-brand {
+                display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+            }
+
+            .footer-links a { display: block; color: #cbd5e1; text-decoration: none; margin-bottom: 0.35rem; }
+            .footer-links a:hover { color: white; }
+
+            .footer-contact li { list-style: none; margin-bottom: 0.5rem; color: #cbd5e1; }
+            .footer-contact li i { color: #93c5fd; margin-right: 0.6rem; }
+
+            .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; margin-top: 1.25rem; }
             transition: all 0.3s;
         }
 
@@ -264,32 +304,38 @@
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5>{{ config('app.name', 'E-Commerce') }}</h5>
-                    <p class="text-muted">Your trusted online shopping destination.</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ route('products.index') }}" class="text-white text-decoration-none">Products</a></li>
-                        <li><a href="{{ route('products.featured') }}" class="text-white text-decoration-none">Featured</a></li>
-                        <li><a href="{{ route('products.new-arrivals') }}" class="text-white text-decoration-none">New Arrivals</a></li>
-                        @auth
-                        <li><a href="{{ route('dashboard') }}" class="text-white text-decoration-none">Dashboard</a></li>
-                        @endauth
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-envelope me-2"></i> support@ecommerce.com</li>
-                        <li><i class="fas fa-phone me-2"></i> (021) 1234-5678</li>
-                        <li><i class="fas fa-map-marker-alt me-2"></i> Jakarta, Indonesia</li>
-                    </ul>
-                </div>
+                        <div class="col-md-4">
+                            <div class="footer-brand">
+                                <span class="site-logo" style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#0d6efd,#0043a8);display:inline-flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 18px rgba(13,110,253,0.18)">
+                                    <i class="fas fa-store"></i>
+                                </span>
+                                <div>
+                                    <div class="brand-text">{{ config('app.name', 'Ecommerce Store') }}</div>
+                                    <div class="small text-muted">Your trusted online shopping destination.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="text-white">Quick Links</h5>
+                            <div class="footer-links">
+                                <a href="{{ route('products.index') }}">Products</a>
+                                <a href="{{ route('products.featured') }}">Featured</a>
+                                <a href="{{ route('products.new-arrivals') }}">New Arrivals</a>
+                                @auth
+                                <a href="{{ route('dashboard') }}">Dashboard</a>
+                                @endauth
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="text-white">Contact Us</h5>
+                            <ul class="footer-contact">
+                                <li><i class="fas fa-envelope"></i> support@ecommerce.com</li>
+                                <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
+                                <li><i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia</li>
+                            </ul>
+                        </div>
             </div>
-            <hr class="bg-secondary">
-            <div class="text-center">
+            <div class="footer-bottom text-center">
                 <p class="mb-0">&copy; {{ date('Y') }} {{ config('app.name', 'E-Commerce') }}. All rights reserved.</p>
             </div>
         </div>
