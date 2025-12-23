@@ -156,6 +156,9 @@
         footer .footer-links a { color: #cbd5e1 !important; }
         footer .footer-links a:hover { color: #ffffff !important; }
 
+        /* Specific fix: footer small brand description should be readable */
+        footer .footer-brand .small.text-muted { color: #cbd5e1 !important; opacity: 1 !important; }
+
         .nav-link {
             font-weight: 500;
             color: #555 !important;
