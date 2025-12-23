@@ -264,26 +264,70 @@
             "11": [{id: 444, name: "Surabaya"}, {id: 445, name: "Malang"}, {id: 446, name: "Sidoarjo"}]
         };
 
+        function populateCitiesForProvince(provinceId) {
+            // clear and set placeholder
+            citySelect.innerHTML = '<option value="">Pilih Kota</option>';
+
+            if (!provinceId) {
+                cityNameInput.value = '';
+                return;
+            }
+
+            // Try fetching from backend endpoint first
+            fetch('/locations/cities?province_id=' + encodeURIComponent(provinceId), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(resp => {
+                if (!resp.ok) throw new Error('Network response was not ok');
+                return resp.json();
+            })
+            .then(data => {
+                if (!Array.isArray(data) || data.length === 0) {
+                    // fallback to local mock list
+                    const fallback = mockCities[provinceId] || [];
+                    fillCityOptions(fallback);
+                    return;
+                }
+                fillCityOptions(data);
+            })
+            .catch(() => {
+                const fallback = mockCities[provinceId] || [];
+                fillCityOptions(fallback);
+            });
+
+            function fillCityOptions(list) {
+                list.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.id;
+                    option.text = city.name;
+                    option.setAttribute('data-name', city.name);
+                    citySelect.add(option);
+                });
+                cityNameInput.value = '';
+                citySelect.value = '';
+            }
+        }
+
         provinceSelect.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
-            provinceNameInput.value = selectedOption.getAttribute('data-name');
-            
-            // Update cities
-            citySelect.innerHTML = '<option value="">Pilih Kota</option>';
-            const cities = mockCities[this.value] || [];
-            cities.forEach(city => {
-                const option = document.createElement('option');
-                option.value = city.id;
-                option.text = city.name;
-                option.setAttribute('data-name', city.name);
-                citySelect.add(option);
-            });
+            provinceNameInput.value = selectedOption ? selectedOption.getAttribute('data-name') || '' : '';
+            populateCitiesForProvince(this.value);
         });
 
         citySelect.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
-            cityNameInput.value = selectedOption.getAttribute('data-name');
+            cityNameInput.value = selectedOption ? (selectedOption.getAttribute('data-name') || '') : '';
         });
+
+        // When modal is shown, populate cities if a province is pre-selected
+        const addAddressModal = document.getElementById('addAddressModal');
+        if (addAddressModal) {
+            addAddressModal.addEventListener('show.bs.modal', function() {
+                if (provinceSelect.value) {
+                    populateCitiesForProvince(provinceSelect.value);
+                }
+            });
+        }
 
         // Smooth scroll to hash
         if (window.location.hash) {

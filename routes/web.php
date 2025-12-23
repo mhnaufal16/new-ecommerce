@@ -24,10 +24,10 @@ Route::get('/debug-admin', function () {
 
 // Public Product Routes (accessible to everyone)
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-Route::get('/products/category/{category}', [ProductController::class, 'byCategory'])->name('products.category');
 Route::get('/products/featured', [ProductController::class, 'featured'])->name('products.featured');
 Route::get('/products/new-arrivals', [ProductController::class, 'newArrivals'])->name('products.new-arrivals');
+Route::get('/products/category/{category}', [ProductController::class, 'byCategory'])->name('products.category');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/search/products', [ProductController::class, 'search'])->name('products.search');
 
 // Auth Routes (from Breeze)
@@ -94,6 +94,8 @@ Route::middleware(['auth'])->group(function () {
 
 // Profile Routes (from Breeze - keep these)
 Route::middleware('auth')->group(function () {
+    // Location helpers (used by profile address form)
+    Route::get('/locations/cities', [\App\Http\Controllers\LocationController::class, 'cities'])->name('locations.cities');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

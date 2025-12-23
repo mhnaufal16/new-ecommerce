@@ -1,5 +1,5 @@
 <?php
-// database/seeders/ProductsSeeder.php
+// database/seeders/ProductSeeder.php
 namespace Database\Seeders;
 
 use App\Models\Product;
@@ -11,7 +11,7 @@ use App\Models\ProductAttribute;
 use App\Models\ProductAttributeValue;
 use Illuminate\Database\Seeder;
 
-class ProductsSeeder extends Seeder
+class ProductSeeder extends Seeder
 {
     public function run()
     {
