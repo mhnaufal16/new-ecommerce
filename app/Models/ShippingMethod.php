@@ -40,6 +40,11 @@ class ShippingMethod extends Model
         return $query->where('is_cod_supported', true);
     }
 
+    public function scopeSorted($query)
+    {
+        return $query->orderBy('sort_order')->orderBy('name');
+    }
+
     // CUSTOM METHODS
     public function getConfigValue($key, $default = null)
     {
