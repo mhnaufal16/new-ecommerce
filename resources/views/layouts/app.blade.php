@@ -91,48 +91,50 @@
             border: none;
             border-radius: var(--border-radius-lg);
             box-shadow: 0 2px 15px rgba(0,0,0,0.03);
-
-            /* Feature card tweaks to match brand weight */
-            .feature-card {
-                border-radius: 1rem;
-                padding: 1.5rem;
-                box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
-                transition: transform .25s ease, box-shadow .25s ease;
-                background: #fff;
-            }
-
-            .feature-card h6 { font-weight: 700; color: #111827; }
-            .feature-card p { color: #6b7280; }
-
-            .feature-icon {
-                width: 56px; height: 56px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
-                background: rgba(13,110,253,0.08); color: var(--primary-color); font-size: 1.4rem;
-                box-shadow: 0 6px 18px rgba(13,110,253,0.06);
-            }
-
-            /* Footer improvements */
-            footer {
-                background: #0f1720 !important;
-                border-radius: 1.5rem 1.5rem 0 0;
-                margin-top: 5rem;
-                color: #cbd5e1;
-                padding-top: 3rem;
-                padding-bottom: 2.5rem;
-            }
-
-            .footer-brand {
-                display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
-            }
-
-            .footer-links a { display: block; color: #cbd5e1; text-decoration: none; margin-bottom: 0.35rem; }
-            .footer-links a:hover { color: white; }
-
-            .footer-contact li { list-style: none; margin-bottom: 0.5rem; color: #cbd5e1; }
-            .footer-contact li i { color: #93c5fd; margin-right: 0.6rem; }
-
-            .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; margin-top: 1.25rem; }
             transition: all 0.3s;
         }
+
+        /* Feature card tweaks to match brand weight */
+        .feature-card {
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+            transition: transform .25s ease, box-shadow .25s ease;
+            background: #fff;
+        }
+
+        .feature-card h6 { font-weight: 700; color: #111827; }
+        .feature-card p { color: #6b7280; }
+
+        .feature-icon {
+            width: 56px; height: 56px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
+            background: rgba(13,110,253,0.08); color: var(--primary-color); font-size: 1.4rem;
+            box-shadow: 0 6px 18px rgba(13,110,253,0.06);
+        }
+
+        /* Footer improvements */
+        footer {
+            background: #0f1720 !important;
+            border-radius: 1.5rem 1.5rem 0 0;
+            margin-top: 5rem;
+            color: #cbd5e1;
+            padding-top: 3rem;
+            padding-bottom: 2.5rem;
+        }
+
+        .footer-brand {
+            display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+        }
+
+        .footer-brand .small { color: #94a3b8; }
+
+        .footer-links a { display: block; color: #cbd5e1; text-decoration: none; margin-bottom: 0.35rem; }
+        .footer-links a:hover { color: white; }
+
+        .footer-contact li { list-style: none; margin-bottom: 0.5rem; color: #cbd5e1; }
+        .footer-contact li i { color: #93c5fd; margin-right: 0.6rem; }
+
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; margin-top: 1.25rem; }
 
         .nav-link {
             font-weight: 500;
@@ -172,12 +174,6 @@
             background: transparent;
             border: none;
             box-shadow: none !important;
-        }
-
-        footer {
-            background: #1a1a1a !important;
-            border-radius: 2rem 2rem 0 0;
-            margin-top: 5rem;
         }
     </style>
 </head>
