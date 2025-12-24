@@ -64,6 +64,16 @@ class LocationController extends Controller
                 ['id' => 445, 'name' => 'Malang'],
                 ['id' => 446, 'name' => 'Sidoarjo'],
             ],
+            10 => [
+                ['id' => 1001, 'name' => 'Semarang'],
+                ['id' => 1002, 'name' => 'Surakarta'],
+                ['id' => 1003, 'name' => 'Magelang'],
+            ],
+            9 => [
+                ['id' => 9001, 'name' => 'Bandung'],
+                ['id' => 9002, 'name' => 'Bekasi'],
+                ['id' => 9003, 'name' => 'Bogor'],
+            ],
         ];
 
         $cities = $map[(int) $provinceId] ?? [];

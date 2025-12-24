@@ -46,7 +46,10 @@ class WishlistController extends Controller
         }
 
         if ($request->ajax()) {
-            return response()->json(['message' => $message]);
+            return response()->json([
+                'message' => $message,
+                'wishlist_count' => $user->wishlists()->count(),
+            ]);
         }
 
         return back()->with('success', $message);
@@ -90,7 +93,8 @@ class WishlistController extends Controller
 
         return response()->json([
             'in_wishlist' => $inWishlist,
-            'message' => $inWishlist ? 'Produk ditambahkan ke wishlist' : 'Produk dihapus dari wishlist'
+            'message' => $inWishlist ? 'Produk ditambahkan ke wishlist' : 'Produk dihapus dari wishlist',
+            'wishlist_count' => $user->wishlists()->count(),
         ]);
     }
 }

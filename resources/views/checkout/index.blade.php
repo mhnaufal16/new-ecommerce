@@ -77,16 +77,23 @@
                     <div class="card-body px-4 pb-4 pt-0">
                         <div class="list-group rounded-4 overflow-hidden border">
                             @foreach($shippingMethods as $method)
+                            @php
+                                $cost = $shippingCosts[$method->id] ?? null;
+                            @endphp
                             <label class="list-group-item list-group-item-action d-flex align-items-center py-3 border-0 border-bottom last-border-0">
                                 <input class="form-check-input me-3 shadow-none" type="radio" name="shipping_method_id" 
-                                       value="{{ $method->id }}" {{ $loop->first ? 'checked' : '' }}>
+                                       value="{{ $method->id }}" {{ $loop->first ? 'checked' : '' }} data-cost="{{ $cost ?? 0 }}">
                                 <div class="d-flex align-items-center w-100">
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1 fw-bold">{{ $method->name }}</h6>
                                         <p class="small text-muted mb-0">{{ $method->description }}</p>
                                     </div>
                                     <div class="text-end">
-                                        <span class="fw-bold text-primary">Est. Rp 15.000</span>
+                                        @if(is_numeric($cost) && $cost > 0)
+                                            <span class="fw-bold text-primary">Est. Rp {{ number_format($cost, 0, ',', '.') }}</span>
+                                        @else
+                                            <span class="fw-bold text-primary">Est. Rp 15.000</span>
+                                        @endif
                                     </div>
                                 </div>
                             </label>
@@ -257,17 +264,80 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const shippingInputs = document.querySelectorAll('input[name="shipping_method_id"]');
+    const shippingInputs = document.querySelectorAll('input[name="shipping_method_id"]');
         const shippingFeeEl = document.getElementById('shippingFee');
         const totalBillEl = document.getElementById('totalBill');
         const baseTotal = {{ $cart->grand_total }};
 
+        function formatRupiah(amount) {
+            return 'Rp ' + amount.toLocaleString('id-ID');
+        }
+
+        function updateTotalsForCost(cost) {
+            shippingFeeEl.textContent = formatRupiah(cost);
+            totalBillEl.textContent = formatRupiah(baseTotal + cost);
+        }
+
+        // Initialize totals based on checked shipping input
+        (function initShipping() {
+            const checked = document.querySelector('input[name="shipping_method_id"]:checked');
+            const cost = checked ? parseInt(checked.getAttribute('data-cost') || 0, 10) : 15000;
+            updateTotalsForCost(cost || 15000);
+        })();
+
         shippingInputs.forEach(input => {
             input.addEventListener('change', function() {
-                // Mock calculation, in real app this would come from backend/data-attrs
-                let cost = 15000; 
-                shippingFeeEl.textContent = 'Rp ' + cost.toLocaleString('id-ID');
-                totalBillEl.textContent = 'Rp ' + (baseTotal + cost).toLocaleString('id-ID');
+                const cost = parseInt(this.getAttribute('data-cost') || 0, 10) || 15000;
+                updateTotalsForCost(cost);
+            });
+        });
+
+        // Update shipping costs when user selects a different address
+        const addressInputs = document.querySelectorAll('input[name="address_id"]');
+        addressInputs.forEach(addr => {
+            addr.addEventListener('change', function() {
+                const addressId = this.value;
+                // show temporary loading state
+                shippingFeeEl.textContent = 'Memuat...';
+
+                fetch('{{ route('checkout.shipping-costs') }}?address_id=' + encodeURIComponent(addressId), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && typeof data === 'object') {
+                        // update data-cost on shipping inputs and update displayed estimate
+                        shippingInputs.forEach(input => {
+                            const id = input.value;
+                            const newCost = parseInt(data[id] || 0, 10) || 0;
+                            input.setAttribute('data-cost', newCost);
+
+                            // find the price label inside the same label element
+                            const labelEl = input.closest('.list-group-item');
+                            if (labelEl) {
+                                const priceEl = labelEl.querySelector('.text-end .fw-bold');
+                                if (priceEl) {
+                                    if (newCost > 0) {
+                                        priceEl.textContent = 'Est. Rp ' + newCost.toLocaleString('id-ID');
+                                    } else {
+                                        priceEl.textContent = 'Est. Rp 15.000';
+                                    }
+                                }
+                            }
+                        });
+
+                        // update totals using currently selected shipping method
+                        const checked = document.querySelector('input[name="shipping_method_id"]:checked');
+                        const checkedCost = checked ? parseInt(checked.getAttribute('data-cost') || 0, 10) || 15000 : 15000;
+                        updateTotalsForCost(checkedCost);
+                    } else {
+                        // fallback
+                        updateTotalsForCost(15000);
+                    }
+                })
+                .catch(() => {
+                    updateTotalsForCost(15000);
+                });
             });
         });
         

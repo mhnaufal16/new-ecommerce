@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     // Checkout Routes
     Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/shipping-costs', [\App\Http\Controllers\CheckoutController::class, 'shippingCosts'])->name('checkout.shipping-costs');
     
     // Variant selection (requires auth)
     Route::post('/products/{product}/variant', [ProductController::class, 'getVariant'])->name('products.variant');

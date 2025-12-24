@@ -147,6 +147,15 @@
         .footer-contact li { list-style: none; margin-bottom: 0.5rem; color: #cbd5e1; }
         .footer-contact li i { color: #93c5fd; margin-right: 0.6rem; }
 
+        /* Responsive footer link grid */
+        .footer-links-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 0.25rem 1rem; }
+        @media (min-width: 768px) {
+            .footer-links-grid { grid-template-columns: 1fr; gap: 0.35rem 0; }
+        }
+
+        .footer-contact li { display: flex; align-items: center; }
+        .footer-contact li i { min-width: 22px; text-align: center; }
+
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; margin-top: 1.25rem; }
 
         /* Ensure all footer text is readable against dark background */
@@ -174,6 +183,23 @@
             position: absolute;
             top: 2px;
             right: 0;
+            background: #ff4d4d;
+            color: white;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .wishlist-count {
+            position: absolute;
+            top: 2px;
+            right: -4px;
             background: #ff4d4d;
             color: white;
             border-radius: 50%;
@@ -261,22 +287,17 @@
                     
                     <!-- Wishlist -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('wishlist.index') }}">
+                        <a class="nav-link position-relative" href="{{ route('wishlist.index') }}" id="wishlist-link">
                             <i class="far fa-heart"></i>
+                            @if(auth()->user()->wishlists()->count() > 0)
+                            <span class="wishlist-count">{{ auth()->user()->wishlists()->count() }}</span>
+                            @endif
                         </a>
                     </li>
                     @endauth
                     
                     <!-- User Dropdown + Logout button -->
                     @auth
-                    <li class="nav-item me-2 d-none d-md-block">
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill">
-                                <i class="fas fa-sign-out-alt me-1"></i> Logout
-                            </button>
-                        </form>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
                            data-bs-toggle="dropdown">
@@ -299,7 +320,7 @@
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li class="d-md-none">
+                            <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="dropdown-item">
@@ -328,42 +349,50 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
+    <footer aria-label="Site Footer">
         <div class="container">
-            <div class="row">
-                        <div class="col-md-4">
-                            <div class="footer-brand">
-                                <span class="site-logo" style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#0d6efd,#0043a8);display:inline-flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 18px rgba(13,110,253,0.18)">
-                                    <i class="fas fa-store"></i>
-                                </span>
-                                <div>
-                                    <div class="brand-text">{{ config('app.name', 'Ecommerce Store') }}</div>
-                                    <div class="small text-muted">Your trusted online shopping destination.</div>
-                                </div>
-                            </div>
+            <div class="row gy-4">
+                <div class="col-12 col-md-4">
+                    <div class="footer-brand">
+                        <span class="site-logo">
+                            <i class="fas fa-store"></i>
+                        </span>
+                        <div>
+                            <div class="brand-text">{{ config('app.name', 'Ecommerce Store') }}</div>
+                            <div class="small text-muted">Your trusted online shopping destination.</div>
                         </div>
-                        <div class="col-md-4">
-                            <h5 class="text-white">Quick Links</h5>
-                            <div class="footer-links">
-                                <a href="{{ route('products.index') }}">Products</a>
-                                <a href="{{ route('products.featured') }}">Featured</a>
-                                <a href="{{ route('products.new-arrivals') }}">New Arrivals</a>
-                                @auth
-                                <a href="{{ route('dashboard') }}">Dashboard</a>
-                                @endauth
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <h5 class="text-white">Contact Us</h5>
-                            <ul class="footer-contact">
-                                <li><i class="fas fa-envelope"></i> support@ecommerce.com</li>
-                                <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
-                                <li><i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia</li>
-                            </ul>
-                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-light btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <h5 class="text-white">Quick Links</h5>
+                    <div class="footer-links footer-links-grid">
+                        <a href="{{ route('products.index') }}">Products</a>
+                        <a href="{{ route('products.featured') }}">Featured</a>
+                        <a href="{{ route('products.new-arrivals') }}">New Arrivals</a>
+                        @auth
+                        <a href="{{ route('dashboard') }}">Dashboard</a>
+                        @endauth
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <h5 class="text-white">Contact Us</h5>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:support@ecommerce.com">support@ecommerce.com</a></li>
+                        <li><i class="fas fa-phone"></i> <a href="tel:+622112345678">(021) 1234-5678</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia</li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-bottom text-center">
-                <p class="mb-0">&copy; {{ date('Y') }} {{ config('app.name', 'E-Commerce') }}. All rights reserved.</p>
+
+            <div class="footer-bottom text-center mt-4">
+                <p class="mb-0 small">&copy; {{ date('Y') }} {{ config('app.name', 'E-Commerce') }}. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -391,6 +420,26 @@
                     badge.className = 'cart-count';
                     badge.textContent = count;
                     cartLink.appendChild(badge);
+                }
+            }
+        }
+        // Update wishlist count dynamically
+        function updateWishlistCount(count) {
+            const wishlistCountEl = document.querySelector('.wishlist-count');
+            if (wishlistCountEl) {
+                wishlistCountEl.textContent = count;
+                if (count <= 0) {
+                    wishlistCountEl.style.display = 'none';
+                } else {
+                    wishlistCountEl.style.display = 'flex';
+                }
+            } else if (count > 0) {
+                const wishlistLink = document.getElementById('wishlist-link');
+                if (wishlistLink) {
+                    const badge = document.createElement('span');
+                    badge.className = 'wishlist-count';
+                    badge.textContent = count;
+                    wishlistLink.appendChild(badge);
                 }
             }
         }

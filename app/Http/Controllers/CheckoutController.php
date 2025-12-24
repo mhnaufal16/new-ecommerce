@@ -37,7 +37,25 @@ class CheckoutController extends Controller
         $shippingMethods = ShippingMethod::active()->sorted()->get();
         $paymentMethods = PaymentMethod::active()->sorted()->get();
 
-        return view('checkout.index', compact('cart', 'addresses', 'shippingMethods', 'paymentMethods'));
+        // Pre-calculate shipping costs for the selected address (use first address as default)
+        $shippingCosts = [];
+        $selectedAddress = $addresses->first();
+        foreach ($shippingMethods as $method) {
+            $cost = null;
+            if ($selectedAddress) {
+                try {
+                    $weight = $cart->items->sum(function($item) {
+                        return ($item->variant ? $item->variant->weight : $item->product->weight) * $item->quantity;
+                    });
+                    $cost = $method->calculateCost($weight, $cart->subtotal, $selectedAddress->province_id) ?? null;
+                } catch (\Exception $e) {
+                    $cost = null;
+                }
+            }
+            $shippingCosts[$method->id] = $cost;
+        }
+
+        return view('checkout.index', compact('cart', 'addresses', 'shippingMethods', 'paymentMethods', 'shippingCosts'));
     }
 
     /**
@@ -137,5 +155,43 @@ class CheckoutController extends Controller
 
             return redirect()->route('orders.show', $order)->with('success', 'Pesanan Anda berhasil dibuat! Silakan lakukan pembayaran.');
         });
+    }
+
+    /**
+     * Return shipping cost estimates for available shipping methods
+     * based on a provided address_id (uses user's cart weight).
+     */
+    public function shippingCosts(Request $request)
+    {
+        $request->validate([
+            'address_id' => 'required|exists:user_addresses,id',
+        ]);
+
+        $user = Auth::user();
+        $cart = $user->cart;
+
+        if (!$cart) {
+            return response()->json(['error' => 'Cart not found'], 404);
+        }
+
+        $address = UserAddress::findOrFail($request->address_id);
+
+        $shippingMethods = ShippingMethod::active()->sorted()->get();
+
+        $weight = $cart->items->sum(function($item) {
+            return ($item->variant ? $item->variant->weight : $item->product->weight) * $item->quantity;
+        });
+
+        $costs = [];
+        foreach ($shippingMethods as $method) {
+            try {
+                $cost = $method->calculateCost($weight, $cart->subtotal, $address->province_id) ?? null;
+            } catch (\Exception $e) {
+                $cost = null;
+            }
+            $costs[$method->id] = $cost;
+        }
+
+        return response()->json($costs);
     }
 }
