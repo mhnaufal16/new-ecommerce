@@ -45,6 +45,8 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'status' => 'required|in:draft,active,inactive',
+            'is_featured' => 'sometimes|boolean',
+            'is_new' => 'sometimes|boolean',
             'image' => 'nullable|image|max:2048'
         ]);
 
@@ -58,6 +60,8 @@ class ProductController extends Controller
             $product->short_description = $validated['short_description'];
             $product->description = $validated['description'];
             $product->status = $validated['status'];
+            $product->is_featured = $request->has('is_featured');
+            $product->is_new = $request->has('is_new');
             $product->type = 'simple'; // Default to simple for now
             $product->save();
 
@@ -128,6 +132,8 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'status' => 'required|in:draft,active,inactive',
+            'is_featured' => 'sometimes|boolean',
+            'is_new' => 'sometimes|boolean',
             'image' => 'nullable|image|max:2048'
         ]);
 
@@ -140,6 +146,8 @@ class ProductController extends Controller
             $product->short_description = $validated['short_description'];
             $product->description = $validated['description'];
             $product->status = $validated['status'];
+            $product->is_featured = $request->has('is_featured');
+            $product->is_new = $request->has('is_new');
             $product->save();
 
             // Categories

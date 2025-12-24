@@ -114,6 +114,16 @@
                                     </select>
                                 </div>
 
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="is_featured" name="is_featured" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_featured">Featured Product</label>
+                                </div>
+
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="is_new" name="is_new" {{ old('is_new', $product->is_new) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_new">New Arrival</label>
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Categories</label>
                                     <div class="card p-2" style="max-height: 200px; overflow-y: auto;">
