@@ -45,8 +45,8 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'status' => 'required|in:draft,active,inactive',
-            'is_featured' => 'sometimes|boolean',
-            'is_new' => 'sometimes|boolean',
+            'is_featured' => 'nullable|in:0,1,on,off,true,false',
+            'is_new' => 'nullable|in:0,1,on,off,true,false',
             'image' => 'nullable|image|max:2048'
         ]);
 
@@ -132,8 +132,8 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'status' => 'required|in:draft,active,inactive',
-            'is_featured' => 'sometimes|boolean',
-            'is_new' => 'sometimes|boolean',
+            'is_featured' => 'nullable|in:0,1,on,off,true,false',
+            'is_new' => 'nullable|in:0,1,on,off,true,false',
             'image' => 'nullable|image|max:2048'
         ]);
 
