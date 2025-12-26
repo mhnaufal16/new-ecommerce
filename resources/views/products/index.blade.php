@@ -249,8 +249,15 @@
                     },
                     body: new FormData(this)
                 })
-                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 401) {
+                        window.location.href = "{{ route('login') }}";
+                        return;
+                    }
+                    return res.json();
+                })
                 .then(data => {
+                    if(!data) return;
                     if(data.success) {
                         showToast('success', data.message);
                         if(typeof updateCartCount === 'function') updateCartCount(data.cart_count);

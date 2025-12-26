@@ -338,8 +338,15 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 401) {
+                    window.location.href = "{{ route('login') }}";
+                    return;
+                }
+                return res.json();
+            })
             .then(data => {
+                if(!data) return;
                 if(data.success) {
                     showToast('success', data.message);
                     if(typeof updateCartCount === 'function') updateCartCount(data.cart_count);
@@ -365,8 +372,15 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 401) {
+                    window.location.href = "{{ route('login') }}";
+                    return;
+                }
+                return res.json();
+            })
             .then(data => {
+                if(!data) return;
                 if(data.in_wishlist) {
                     this.innerHTML = '<i class="fas fa-heart me-1"></i> In Wishlist';
                     this.className = 'btn btn-danger rounded-pill flex-grow-1 fw-medium';
