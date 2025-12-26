@@ -73,9 +73,19 @@
                                 </span>
                             </td>
                             <td class="pe-4 text-end">
-                                <a href="{{ route('orders.show', $order) }}" class="btn btn-icon btn-light rounded-circle border shadow-xs" title="Lihat Detail">
-                                    <i class="fas fa-eye text-primary"></i>
-                                </a>
+                                <div class="d-flex justify-content-end gap-2">
+                                    @if($order->status !== 'completed' && $order->shipping_status === 'shipped')
+                                    <form action="{{ route('orders.mark-received', $order) }}" method="POST" onsubmit="return confirm('Konfirmasi pesanan telah diterima?')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm rounded-pill px-3 fw-bold small">
+                                            <i class="fas fa-check me-1"></i> Diterima
+                                        </button>
+                                    </form>
+                                    @endif
+                                    <a href="{{ route('orders.show', $order) }}" class="btn btn-icon btn-light rounded-circle border shadow-xs" title="Lihat Detail">
+                                        <i class="fas fa-eye text-primary"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         @endforeach

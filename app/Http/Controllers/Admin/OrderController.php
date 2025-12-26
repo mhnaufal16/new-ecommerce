@@ -66,9 +66,39 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'shipping_status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+            'courier_name' => 'nullable|string|max:50',
+            'tracking_number' => 'nullable|string|max:100',
         ]);
 
         $order->updateShippingStatus($validated['shipping_status']);
+
+        // Handle shipping details if status is shipped or processing/delivered
+        if ($request->filled('courier_name') || $request->filled('tracking_number')) {
+            $shipment = $order->shipments()->first();
+            
+            if ($shipment) {
+                $shipment->update([
+                    'courier_name' => $validated['courier_name'] ?? $shipment->courier_name,
+                    'tracking_number' => $validated['tracking_number'] ?? $shipment->tracking_number,
+                ]);
+            } else {
+                $order->shipments()->create([
+                    'shipping_method' => 'standard',
+                    'courier_name' => $validated['courier_name'] ?? 'Other',
+                    'courier_service' => 'Standard',
+                    'shipping_cost' => $order->shipping_amount,
+                    'tracking_number' => $validated['tracking_number'],
+                ]);
+            }
+
+            if ($validated['shipping_status'] === 'shipped') {
+                $order->markAsShipped($validated['tracking_number']);
+            }
+        }
+
+        if ($validated['shipping_status'] === 'delivered') {
+            $order->markAsDelivered();
+        }
 
         return back()->with('success', 'Shipping status updated successfully.');
     }

@@ -187,6 +187,15 @@
                     <div class="alert alert-success border-0 small mb-0 rounded-4 shadow-sm text-start">
                         <i class="fas fa-check-circle me-2"></i> Pembayaran berhasil dilakukan pada {{ $order->updated_at->format('d M Y, H:i') }}.
                     </div>
+
+                        @if($order->status !== 'completed' && $order->shipping_status === 'shipped')
+                        <form action="{{ route('orders.mark-received', $order) }}" method="POST" onsubmit="return confirm('Konfirmasi pesanan telah diterima?')" class="mt-4">
+                            @csrf
+                            <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold shadow-sm">
+                                <i class="fas fa-box-open me-2"></i> Konfirmasi Pesanan Diterima
+                            </button>
+                        </form>
+                        @endif
                     @endif
                 </div>
             </div>

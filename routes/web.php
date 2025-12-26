@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
     Route::post('/orders/{order}/confirm-payment', [OrderController::class, 'confirmPayment'])->name('orders.confirm-payment');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/mark-received', [OrderController::class, 'markAsReceived'])->name('orders.mark-received');
 
     // Review Routes
     Route::post('/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');

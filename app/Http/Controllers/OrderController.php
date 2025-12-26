@@ -101,6 +101,26 @@ class OrderController extends Controller
     }
 
     /**
+     * Mark the order as received by the customer.
+     */
+    public function markAsReceived(string $id)
+    {
+        $order = Auth::user()->orders()->findOrFail($id);
+
+        if ($order->status === 'completed') {
+            return back()->with('info', 'Pesanan ini sudah selesai.');
+        }
+
+        if ($order->shipping_status !== 'shipped') {
+            return back()->with('error', 'Pesanan belum dalam pengiriman.');
+        }
+
+        $order->markAsDelivered();
+
+        return back()->with('success', 'Terima kasih! Pesanan Anda telah ditandai sebagai diterima dan selesai.');
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
