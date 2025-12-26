@@ -87,6 +87,7 @@
     </div>
 
     <!-- Addresses Section -->
+    @if(auth()->user()->type !== 'admin')
     <div id="addresses" class="card border-0 shadow-premium rounded-4 mb-4 overflow-hidden">
         <div class="card-header bg-white py-4 px-4 d-flex justify-content-between align-items-center border-0">
             <h5 class="mb-0 fw-bold"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Alamat Pengiriman</h5>
@@ -144,6 +145,7 @@
             @endif
         </div>
     </div>
+    @endif
 
 <!-- Add Address Modal -->
 <div class="modal fade" id="addAddressModal" tabindex="-1">

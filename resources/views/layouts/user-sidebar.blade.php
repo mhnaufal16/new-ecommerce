@@ -19,7 +19,7 @@
             </div>
             <h5 class="mt-3 mb-1 fw-bold text-dark">{{ $user->name }}</h5>
             <p class="text-muted small mb-3">{{ $user->email }}</p>
-            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-bold small">CUSTOMER</span>
+            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-bold small text-uppercase">{{ $user->type }}</span>
         </div>
 
         <!-- Nav Links -->
@@ -55,11 +55,13 @@
                     @endif
                 </a>
 
+                @if($user->type !== 'admin')
                 <a href="{{ route('profile.edit') }}#addresses" 
                    class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->url() == route('profile.edit') && request()->hash == '#addresses' ? 'active shadow-sm' : '' }}">
                     <div class="nav-icon-box me-3"><i class="fas fa-map-marker-alt"></i></div>
                     <span class="fw-bold">Alamat</span>
                 </a>
+                @endif
 
                 <a href="{{ route('profile.edit') }}#security" 
                    class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->url() == route('profile.edit') && request()->hash == '#security' ? 'active shadow-sm' : '' }}">
