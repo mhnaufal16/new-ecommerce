@@ -71,69 +71,69 @@
             <!-- Managements -->
             <div class="row">
                 <div class="col-md-4">
-                     <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">Order Status</h6>
+                     <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                            <h6 class="fw-bold text-muted text-uppercase small ls-1 mb-0">Order Status</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <form action="{{ route('admin.orders.update-status', $order) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
-                                <div class="mb-3">
-                                    <select name="status" class="form-select mb-2">
+                                <div class="mb-0">
+                                    <select name="status" class="form-select border-2 rounded-3 mb-3 py-2">
                                         @foreach(['pending', 'processing', 'on_hold', 'completed', 'cancelled', 'refunded', 'failed'] as $status)
                                             <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>
                                                 {{ ucfirst($status) }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-primary btn-sm w-100">Update Status</button>
+                                    <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold w-100 shadow-sm transition-all">Update Status</button>
                                 </div>
                             </form>
                         </div>
                      </div>
                 </div>
                 <div class="col-md-4">
-                     <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">Payment Status</h6>
+                     <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                            <h6 class="fw-bold text-muted text-uppercase small ls-1 mb-0">Payment Status</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <form action="{{ route('admin.orders.update-payment-status', $order) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
-                                <div class="mb-3">
-                                    <select name="payment_status" class="form-select mb-2">
+                                <div class="mb-0">
+                                    <select name="payment_status" class="form-select border-2 rounded-3 mb-3 py-2">
                                         @foreach(['pending', 'paid', 'partially_paid', 'refunded', 'failed'] as $status)
                                             <option value="{{ $status }}" {{ $order->payment_status === $status ? 'selected' : '' }}>
                                                 {{ ucfirst(str_replace('_', ' ', $status)) }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-info text-white btn-sm w-100">Update Payment</button>
+                                    <button type="submit" class="btn btn-info text-white rounded-pill py-2 fw-bold w-100 shadow-sm transition-all" style="background-color: #0dcaf0; border-color: #0dcaf0;">Update Payment</button>
                                 </div>
                             </form>
                         </div>
                      </div>
                 </div>
                 <div class="col-md-4">
-                     <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">Shipping Status</h6>
+                     <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                            <h6 class="fw-bold text-muted text-uppercase small ls-1 mb-0">Shipping Status</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <form action="{{ route('admin.orders.update-shipping-status', $order) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
-                                <div class="mb-3">
-                                    <select name="shipping_status" class="form-select mb-2">
+                                <div class="mb-0">
+                                    <select name="shipping_status" class="form-select border-2 rounded-3 mb-3 py-2">
                                         @foreach(['pending', 'processing', 'shipped', 'delivered', 'cancelled'] as $status)
                                             <option value="{{ $status }}" {{ $order->shipping_status === $status ? 'selected' : '' }}>
                                                 {{ ucfirst($status) }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-warning text-dark btn-sm w-100">Update Shipping</button>
+                                    <button type="submit" class="btn btn-warning text-dark rounded-pill py-2 fw-bold w-100 shadow-sm transition-all" style="background-color: #ffc107; border-color: #ffc107;">Update Shipping</button>
                                 </div>
                             </form>
                         </div>

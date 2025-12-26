@@ -76,7 +76,10 @@
                             <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-secondary w-100 rounded-pill py-3 fw-bold">Lihat Detail Pesanan</a>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm" onclick="alert('Ini adalah simulasi. Di sistem nyata, ini akan mengarahkan ke gateway pembayaran atau mengonfirmasi pembayaran.')">Konfirmasi Pembayaran</button>
+                            <form action="{{ route('orders.confirm-payment', $order) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">Konfirmasi Pembayaran</button>
+                            </form>
                         </div>
                     </div>
                 </div>

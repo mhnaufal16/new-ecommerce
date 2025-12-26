@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -60,6 +61,43 @@ class OrderController extends Controller
         $paymentMethod = \App\Models\PaymentMethod::where('code', $payment->payment_method)->first();
 
         return view('orders.pay', compact('order', 'payment', 'paymentMethod'));
+    }
+
+    /**
+     * Confirm the payment for the order.
+     */
+    public function confirmPayment(string $id)
+    {
+        $order = Auth::user()->orders()->with('payments')->findOrFail($id);
+
+        if ($order->payment_status === 'paid') {
+            return redirect()->route('orders.show', $order)->with('info', 'Pesanan ini sudah lunas.');
+        }
+
+        $payment = $order->payments()->where('transaction_status', 'pending')->latest()->first();
+
+        DB::transaction(function () use ($order, $payment) {
+            // Update Payment record
+            if ($payment) {
+                $payment->update([
+                    'transaction_status' => 'settlement',
+                    'paid_at' => now(),
+                    'payment_details' => array_merge($payment->payment_details ?? [], [
+                        'confirmed_via' => 'manual_confirmation_button',
+                        'confirmed_at' => now()->toDateTimeString(),
+                    ])
+                ]);
+            }
+
+            // Update Order record
+            $order->update([
+                'payment_status' => 'paid',
+                'status' => 'processing', // Move to processing after payment
+                'total_paid' => $order->grand_total
+            ]);
+        });
+
+        return redirect()->route('orders.show', $order)->with('success', 'Pembayaran Anda telah berhasil dikonfirmasi!');
     }
 
     /**

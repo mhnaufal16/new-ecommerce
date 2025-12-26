@@ -244,14 +244,7 @@ class Order extends Model
         $oldStatus = $this->status;
         $this->update(['status' => $newStatus]);
 
-        // Log status change
-        activity('order')
-            ->performedOn($this)
-            ->withProperties([
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
-            ])
-            ->log('Order status updated');
+//
 
         return $this;
     }
@@ -266,14 +259,7 @@ class Order extends Model
             $this->update(['total_paid' => $this->grand_total]);
         }
 
-        // Log status change
-        activity('payment')
-            ->performedOn($this)
-            ->withProperties([
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
-            ])
-            ->log('Payment status updated');
+//
 
         return $this;
     }
@@ -283,14 +269,7 @@ class Order extends Model
         $oldStatus = $this->shipping_status;
         $this->update(['shipping_status' => $newStatus]);
 
-        // Log status change
-        activity('shipping')
-            ->performedOn($this)
-            ->withProperties([
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
-            ])
-            ->log('Shipping status updated');
+//
 
         return $this;
     }
