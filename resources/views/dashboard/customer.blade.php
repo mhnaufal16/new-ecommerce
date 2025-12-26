@@ -1,168 +1,118 @@
 {{-- resources/views/dashboard/customer.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.user')
 
-@section('content')
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <div class="position-relative d-inline-block">
-                            <img src="{{ $user->avatar ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=007bff&color=fff' }}" 
-                                 alt="{{ $user->name }}"
-                                 class="rounded-circle shadow"
-                                 width="100"
-                                 height="100">
-                            <span class="position-absolute bottom-0 end-0 bg-success rounded-circle p-1 border border-3 border-white">
-                                <i class="fas fa-check text-white"></i>
-                            </span>
+@section('title', 'Dashboard Saya - ' . config('app.name'))
+
+@section('user_content')
+    <!-- Top Welcome Bar -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-7">
+            <h2 class="fw-bold mb-1">Halo, {{ explode(' ', $user->name)[0] }}! <span class="wave-emoji">👋</span></h2>
+            <p class="text-muted mb-0">Selamat datang kembali di dashboard Anda. Berikut adalah ringkasan aktivitas belanja Anda.</p>
+        </div>
+        <div class="col-md-5 text-md-end mt-3 mt-md-0">
+            <div class="bg-white d-inline-flex p-2 rounded-pill shadow-sm border px-3 align-items-center">
+                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                <span class="small fw-bold">{{ date('d M Y') }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid (Aligned with Admin Style) -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #0d6efd !important;">
+                <div class="card-body p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-muted small fw-bold mb-0">TOTAL PESANAN</h6>
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2">
+                            <i class="fas fa-shopping-bag fa-lg"></i>
                         </div>
-                        <h4 class="mt-3 mb-1">{{ $user->name }}</h4>
-                        <p class="text-muted mb-0">{{ $user->email }}</p>
-                        <span class="badge bg-primary mt-2">Customer</span>
                     </div>
-
-                    <div class="list-group list-group-flush">
-                        <a href="{{ route('dashboard') }}" 
-                           class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                        </a>
-                        <a href="{{ route('profile.edit') }}" 
-                           class="list-group-item list-group-item-action">
-                            <i class="fas fa-user-edit me-2"></i>Edit Profile
-                        </a>
-                        <a href="{{ route('orders.index') }}" 
-                           class="list-group-item list-group-item-action">
-                            <i class="fas fa-shopping-bag me-2"></i>My Orders
-                            <span class="badge bg-primary float-end">{{ $total_orders }}</span>
-                        </a>
-                        <a href="{{ route('wishlist.index') }}" 
-                           class="list-group-item list-group-item-action">
-                            <i class="fas fa-heart me-2"></i>Wishlist
-                            <span class="badge bg-danger float-end">{{ $wishlist_count }}</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-map-marker-alt me-2"></i>Addresses
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-lock me-2"></i>Change Password
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="list-group-item list-group-item-action text-danger">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </button>
-                        </form>
+                    <h3 class="fw-bold mb-0 text-dark">{{ $total_orders }}</h3>
+                    <div class="mt-2">
+                        <span class="badge bg-primary bg-opacity-10 text-primary x-small fw-bold">Riwayat Belanja</span>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Main Content -->
-        <div class="col-lg-9">
-            <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title mb-0">Total Orders</h6>
-                                    <h2 class="display-6 mb-0">{{ $total_orders }}</h2>
-                                </div>
-                                <div class="bg-white rounded-circle p-3">
-                                    <i class="fas fa-shopping-bag fa-2x text-primary"></i>
-                                </div>
-                            </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #198754 !important;">
+                <div class="card-body p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-muted small fw-bold mb-0">PESANAN SELESAI</h6>
+                        <div class="bg-success bg-opacity-10 text-success rounded-3 p-2">
+                            <i class="fas fa-check-circle fa-lg"></i>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title mb-0">Completed</h6>
-                                    <h2 class="display-6 mb-0">{{ $completed_orders }}</h2>
-                                </div>
-                                <div class="bg-white rounded-circle p-3">
-                                    <i class="fas fa-check-circle fa-2x text-success"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title mb-0">Pending</h6>
-                                    <h2 class="display-6 mb-0">{{ $pending_orders }}</h2>
-                                </div>
-                                <div class="bg-white rounded-circle p-3">
-                                    <i class="fas fa-clock fa-2x text-warning"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 mb-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title mb-0">Total Spent</h6>
-                                    <h2 class="display-6 mb-0">Rp {{ number_format($total_spent, 0, ',', '.') }}</h2>
-                                </div>
-                                <div class="bg-white rounded-circle p-3">
-                                    <i class="fas fa-wallet fa-2x text-info"></i>
-                                </div>
-                            </div>
-                        </div>
+                    <h3 class="fw-bold mb-0 text-dark">{{ $completed_orders }}</h3>
+                    <div class="mt-2">
+                        <span class="badge bg-success bg-opacity-10 text-success x-small fw-bold">Berhasil Diterima</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Orders -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="fas fa-history me-2"></i>Recent Orders
-                        </h5>
-                        <a href="{{ route('orders.index') }}" class="btn btn-sm btn-outline-primary">
-                            View All <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #ffc107 !important;">
+                <div class="card-body p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-muted small fw-bold mb-0">PESANAN AKTIF</h6>
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2">
+                            <i class="fas fa-clock fa-lg"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-dark">{{ $pending_orders }}</h3>
+                    <div class="mt-2">
+                        <span class="badge bg-warning bg-opacity-20 text-dark x-small fw-bold">Dalam Proses</span>
                     </div>
                 </div>
-                <div class="card-body">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #0dcaf0 !important;">
+                <div class="card-body p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-muted small fw-bold mb-0">TOTAL BELANJA</h6>
+                        <div class="bg-info bg-opacity-10 text-info rounded-3 p-2">
+                            <i class="fas fa-wallet fa-lg"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-dark">Rp{{ number_format($total_spent, 0, ',', '.') }}</h3>
+                    <div class="mt-2">
+                        <span class="badge bg-info bg-opacity-10 text-info x-small fw-bold">Total Pengeluaran</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="row g-4">
+        <!-- Recent Orders -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-premium rounded-4 h-100">
+                <div class="card-header bg-white py-4 px-4 d-flex justify-content-between align-items-center border-0">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-history me-2 text-primary"></i>Pesanan Terbaru</h5>
+                    <a href="{{ route('orders.index') }}" class="btn btn-light btn-sm rounded-pill px-3 fw-bold text-muted small border">Lihat Semua</a>
+                </div>
+                <div class="card-body px-0 pt-0">
                     @if($recent_orders->count() > 0)
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
+                        <table class="table table-hover align-middle mb-0 custom-admin-table">
+                            <thead class="bg-light text-muted x-small">
                                 <tr>
-                                    <th>Order #</th>
-                                    <th>Date</th>
-                                    <th>Items</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Action</th>
+                                    <th class="ps-4">NOMOR PESANAN</th>
+                                    <th>TANGGAL</th>
+                                    <th>STATUS</th>
+                                    <th>TOTAL</th>
+                                    <th class="pe-4 text-end">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($recent_orders as $order)
                                 <tr>
-                                    <td>
-                                        <strong>{{ $order->order_number }}</strong>
-                                    </td>
-                                    <td>{{ $order->created_at->format('d M Y') }}</td>
-                                    <td>{{ $order->items->count() }} items</td>
+                                    <td class="ps-4"><span class="fw-bold text-dark">#{{ $order->order_number }}</span></td>
+                                    <td><span class="small text-muted">{{ $order->created_at->format('d M, Y') }}</span></td>
                                     <td>
                                         @php
                                             $statusColors = [
@@ -174,16 +124,14 @@
                                                 'delivered' => 'success',
                                             ];
                                         @endphp
-                                        <span class="badge bg-{{ $statusColors[$order->status] ?? 'secondary' }}">
-                                            {{ ucfirst($order->status) }}
+                                        <span class="badge bg-{{ $statusColors[$order->status] ?? 'secondary' }} bg-opacity-10 text-{{ $statusColors[$order->status] ?? 'secondary' }} rounded-pill px-2" style="font-size: 0.7rem;">
+                                            {{ strtoupper($order->status) }}
                                         </span>
                                     </td>
-                                    <td class="fw-semibold">
-                                        Rp {{ number_format($order->grand_total, 0, ',', '.') }}
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-eye"></i>
+                                    <td><span class="fw-bold text-dark">Rp{{ number_format($order->grand_total, 0, ',', '.') }}</span></td>
+                                    <td class="pe-4 text-end">
+                                        <a href="{{ route('orders.show', $order) }}" class="btn btn-icon btn-light rounded-circle border shadow-xs" title="View Details">
+                                            <i class="fas fa-eye text-primary"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -193,80 +141,122 @@
                     </div>
                     @else
                     <div class="text-center py-5">
-                        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
-                        <h4>No orders yet</h4>
-                        <p class="text-muted mb-4">Start shopping to see your orders here</p>
-                        <a href="{{ route('products.index') }}" class="btn btn-primary">
-                            <i class="fas fa-shopping-bag me-2"></i>Start Shopping
-                        </a>
+                        <div class="bg-light rounded-circle d-inline-block p-4 mb-3">
+                            <i class="fas fa-shopping-basket fa-3x text-muted opacity-25"></i>
+                        </div>
+                        <h6 class="text-muted">Anda belum memiliki pesanan.</h6>
+                        <a href="{{ route('products.index') }}" class="btn btn-primary rounded-pill mt-3 px-4">Mulai Belanja</a>
                     </div>
                     @endif
                 </div>
             </div>
+        </div>
 
-            <!-- Quick Actions -->
-            <div class="row mt-4">
-                <div class="col-md-4 mb-3">
-                    <div class="card text-center h-100">
-                        <div class="card-body">
-                            <div class="bg-primary rounded-circle p-3 d-inline-block mb-3">
-                                <i class="fas fa-shopping-cart fa-2x text-white"></i>
+        <!-- Quick Action Sidebar Widgets -->
+        <div class="col-lg-4">
+            <div class="row g-4">
+                <div class="col-12">
+                    <a href="{{ route('products.index') }}" class="text-decoration-none d-block">
+                        <div class="card border-0 shadow-premium rounded-4 quick-action-card transition-all border-hover-primary h-100">
+                            <div class="card-body p-4 text-center">
+                                <div class="action-icon bg-primary bg-opacity-10 text-primary mb-3 mx-auto">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark">Lanjut Belanja</h6>
+                                <p class="x-small text-muted mb-0">Temukan produk terbaru kami</p>
+                                <div class="mt-3">
+                                    <span class="btn btn-primary btn-sm rounded-pill px-4">Beli Sekarang</span>
+                                </div>
                             </div>
-                            <h5>Continue Shopping</h5>
-                            <p class="text-muted">Browse our latest products</p>
-                            <a href="{{ route('products.index') }}" class="btn btn-primary">
-                                Shop Now
-                            </a>
                         </div>
-                    </div>
+                    </a>
                 </div>
-
-                <div class="col-md-4 mb-3">
-                    <div class="card text-center h-100">
-                        <div class="card-body">
-                            <div class="bg-success rounded-circle p-3 d-inline-block mb-3">
-                                <i class="fas fa-heart fa-2x text-white"></i>
+                <div class="col-12">
+                    <a href="{{ route('wishlist.index') }}" class="text-decoration-none d-block">
+                        <div class="card border-0 shadow-premium rounded-4 quick-action-card transition-all border-hover-success h-100">
+                            <div class="card-body p-4 text-center">
+                                <div class="action-icon bg-success bg-opacity-10 text-success mb-3 mx-auto">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark">Wishlist Anda</h6>
+                                <p class="x-small text-muted mb-0">{{ $wishlist_count }} produk tersimpan</p>
+                                <div class="mt-3">
+                                    <span class="btn btn-success btn-sm rounded-pill px-4 text-white">Lihat Wishlist</span>
+                                </div>
                             </div>
-                            <h5>Your Wishlist</h5>
-                            <p class="text-muted">{{ $wishlist_count }} items saved</p>
-                            <a href="{{ route('wishlist.index') }}" class="btn btn-success">
-                                View Wishlist
-                            </a>
                         </div>
-                    </div>
+                    </a>
                 </div>
-
-                <div class="col-md-4 mb-3">
-                    <div class="card text-center h-100">
-                        <div class="card-body">
-                            <div class="bg-info rounded-circle p-3 d-inline-block mb-3">
-                                <i class="fas fa-user-edit fa-2x text-white"></i>
+                <div class="col-12">
+                    <a href="{{ route('profile.edit') }}" class="text-decoration-none d-block">
+                        <div class="card border-0 shadow-premium rounded-4 quick-action-card transition-all border-hover-info h-100">
+                            <div class="card-body p-4 text-center">
+                                <div class="action-icon bg-info bg-opacity-10 text-info mb-3 mx-auto">
+                                    <i class="fas fa-user-edit"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark">Perbarui Profil</h6>
+                                <p class="x-small text-muted mb-0">Kelola informasi akun Anda</p>
+                                <div class="mt-3">
+                                    <span class="btn btn-info btn-sm rounded-pill px-4 text-white">Edit Profil</span>
+                                </div>
                             </div>
-                            <h5>Update Profile</h5>
-                            <p class="text-muted">Keep your information current</p>
-                            <a href="{{ route('profile.edit') }}" class="btn btn-info">
-                                Edit Profile
-                            </a>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('styles')
 <style>
-.card {
-    transition: transform 0.3s ease;
-}
-.card:hover {
-    transform: translateY(-5px);
-}
-.list-group-item.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-}
+    .shadow-premium { box-shadow: 0 1rem 3rem rgba(0,0,0,.08) !important; }
+    .x-small { font-size: 0.75rem; letter-spacing: 0.5px; }
+    .stats-card { transition: transform 0.3s; cursor: default; }
+    .stats-card:hover { transform: translateY(-5px); }
+    .custom-admin-table thead th {
+        font-weight: 700;
+        letter-spacing: 1px;
+        border-bottom: 0;
+        padding-top: 20px;
+        padding-bottom: 15px;
+    }
+    .custom-admin-table tbody td {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border-bottom-color: #f8fafc;
+    }
+    .btn-icon { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+    .wave-emoji { 
+        display: inline-block; 
+        animation: wave-animation 2.5s infinite; 
+        transform-origin: 70% 70%; 
+    }
+    @keyframes wave-animation {
+        0% { transform: rotate( 0.0deg) }
+        10% { transform: rotate(14.0deg) }
+        20% { transform: rotate(-8.0deg) }
+        30% { transform: rotate(14.0deg) }
+        40% { transform: rotate(-4.0deg) }
+        50% { transform: rotate(10.0deg) }
+        60% { transform: rotate( 0.0deg) }
+        100% { transform: rotate( 0.0deg) }
+    }
+    .action-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .quick-action-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 1.5rem 4rem rgba(0,0,0,0.12) !important;
+    }
+    .border-hover-primary:hover { border-bottom: 4px solid var(--primary-color) !important; }
+    .border-hover-success:hover { border-bottom: 4px solid #198754 !important; }
+    .border-hover-info:hover { border-bottom: 4px solid #0dcaf0 !important; }
 </style>
 @endpush

@@ -1,9 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Manajemen Produk - ' . config('app.name'))
 
-@section('content')
-<div class="container-fluid py-5 px-lg-5">
+@section('admin_content')
     <!-- Header Admin -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
         <div>
@@ -147,7 +146,6 @@
             @endif
         </div>
     </div>
-</div>
 
 <style>
     .shadow-premium { box-shadow: 0 1rem 3rem rgba(0,0,0,.08) !important; }

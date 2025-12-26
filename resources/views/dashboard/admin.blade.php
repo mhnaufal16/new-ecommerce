@@ -1,88 +1,8 @@
-{{-- resources/views/dashboard/admin.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Admin Dashboard - ' . config('app.name'))
 
-@section('content')
-<div class="container-fluid py-5 px-lg-5">
-    <div class="row g-4">
-        <!-- Sidebar Navigation -->
-        <div class="col-lg-3">
-            <div class="card border-0 shadow-premium rounded-4 overflow-hidden sticky-top" style="top: 2rem;">
-                <div class="card-body p-0">
-                    <!-- Profile Section -->
-                    <div class="text-center py-5 bg-light mb-2">
-                        <div class="position-relative d-inline-block">
-                            <img src="{{ $user->avatar ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0d6efd&color=fff' }}" 
-                                 alt="{{ $user->name }}"
-                                 class="rounded-circle shadow-sm border border-4 border-white"
-                                 width="110"
-                                 height="110"
-                                 style="object-fit: cover;">
-                            <span class="position-absolute bottom-0 end-0 bg-primary rounded-circle p-2 border border-3 border-white shadow-sm" title="Administrator">
-                                <i class="fas fa-crown text-white fa-sm"></i>
-                            </span>
-                        </div>
-                        <h5 class="mt-3 mb-1 fw-bold text-dark">{{ $user->name }}</h5>
-                        <p class="text-muted small mb-3">{{ $user->email }}</p>
-                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-bold small">ADMINISTRATOR</span>
-                    </div>
-
-                    <!-- Nav Links -->
-                    <div class="p-3">
-                        <div class="list-group list-group-flush admin-nav">
-                            <a href="{{ route('dashboard') }}" 
-                               class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->routeIs('dashboard') ? 'active shadow-sm' : '' }}">
-                                <div class="nav-icon-box me-3"><i class="fas fa-grid-2"></i></div>
-                                <span class="fw-bold">Dashboard</span>
-                            </a>
-                            <a href="{{ route('admin.products.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-box"></i></div>
-                                <span class="fw-bold">Produk</span>
-                                <span class="badge bg-primary ms-auto rounded-pill px-2">{{ $total_products }}</span>
-                            </a>
-                            <a href="{{ route('admin.brands.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-tags"></i></div>
-                                <span class="fw-bold">Merek</span>
-                            </a>
-                            <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-folder"></i></div>
-                                <span class="fw-bold">Kategori</span>
-                            </a>
-                            <a href="{{ route('admin.orders.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-shopping-bag"></i></div>
-                                <span class="fw-bold">Pesanan</span>
-                                <span class="badge bg-success ms-auto rounded-pill px-2">{{ $total_orders }}</span>
-                            </a>
-                            <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-users"></i></div>
-                                <span class="fw-bold">Pelanggan</span>
-                                <span class="badge bg-info ms-auto rounded-pill px-2 text-white">{{ $total_users }}</span>
-                            </a>
-                            <a href="{{ route('admin.reviews.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-comment-dots"></i></div>
-                                <span class="fw-bold">Ulasan</span>
-                                @if($pending_reviews > 0)
-                                <span class="badge bg-warning ms-auto rounded-pill px-2 text-white">{{ $pending_reviews }}</span>
-                                @endif
-                            </a>
-                            <div class="my-3 border-top opacity-50"></div>
-                            <a href="{{ route('admin.analytics.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-chart-line"></i></div>
-                                <span class="fw-bold">Analitik</span>
-                            </a>
-                            <a href="{{ route('admin.settings.index') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center">
-                                <div class="nav-icon-box me-3"><i class="fas fa-sliders-h"></i></div>
-                                <span class="fw-bold">Pengaturan</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Dashboard Content -->
-        <div class="col-lg-9">
+@section('admin_content')
             <!-- Top Welcome Bar -->
             <div class="row mb-5 align-items-center">
                 <div class="col-md-7">
@@ -100,46 +20,66 @@
             <!-- Enhanced Stats Grid -->
             <div class="row g-4 mb-5">
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);">
-                        <div class="card-body p-4 text-white position-relative">
-                            <div class="opacity-10 position-absolute end-0 bottom-0 mb-n3 me-n2">
-                                <i class="fas fa-money-bill-wave fa-6x"></i>
+                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #0d6efd !important;">
+                        <div class="card-body p-4 position-relative">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-muted small fw-bold mb-0">TOTAL PENDAPATAN</h6>
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2">
+                                    <i class="fas fa-money-bill-wave fa-lg"></i>
+                                </div>
                             </div>
-                            <h6 class="text-white text-opacity-75 small fw-bold mb-3">TOTAL PENDAPATAN</h6>
-                            <h3 class="fw-bold mb-0">Rp {{ number_format($total_revenue, 0, ',', '.') }}</h3>
+                            <h3 class="fw-bold mb-0 text-dark">Rp {{ number_format($total_revenue, 0, ',', '.') }}</h3>
+                            <div class="mt-2">
+                                <span class="badge bg-success bg-opacity-10 text-success x-small fw-bold">+12% vs bln lalu</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: linear-gradient(135deg, #198754 0%, #146c43 100%);">
-                        <div class="card-body p-4 text-white position-relative">
-                            <div class="opacity-10 position-absolute end-0 bottom-0 mb-n3 me-n2">
-                                <i class="fas fa-shopping-cart fa-6x"></i>
+                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #198754 !important;">
+                        <div class="card-body p-4 position-relative">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-muted small fw-bold mb-0">TOTAL PESANAN</h6>
+                                <div class="bg-success bg-opacity-10 text-success rounded-3 p-2">
+                                    <i class="fas fa-shopping-cart fa-lg"></i>
+                                </div>
                             </div>
-                            <h6 class="text-white text-opacity-75 small fw-bold mb-3">TOTAL PESANAN</h6>
-                            <h3 class="fw-bold mb-0">{{ $total_orders }}</h3>
+                            <h3 class="fw-bold mb-0 text-dark">{{ $total_orders }}</h3>
+                            <div class="mt-2">
+                                <span class="badge bg-success bg-opacity-10 text-success x-small fw-bold">Performa Stabil</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);">
-                        <div class="card-body p-4 text-white position-relative">
-                            <div class="opacity-10 position-absolute end-0 bottom-0 mb-n3 me-n2">
-                                <i class="fas fa-box fa-6x"></i>
+                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #0dcaf0 !important;">
+                        <div class="card-body p-4 position-relative">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-muted small fw-bold mb-0">TOTAL PRODUK</h6>
+                                <div class="bg-info bg-opacity-10 text-info rounded-3 p-2">
+                                    <i class="fas fa-box fa-lg"></i>
+                                </div>
                             </div>
-                            <h6 class="text-white text-opacity-75 small fw-bold mb-3">TOTAL PRODUK</h6>
-                            <h3 class="fw-bold mb-0">{{ $total_products }}</h3>
+                            <h3 class="fw-bold mb-0 text-dark">{{ $total_products }}</h3>
+                            <div class="mt-2">
+                                <span class="badge bg-primary bg-opacity-10 text-primary x-small fw-bold">Katalog Aktif</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);">
-                        <div class="card-body p-4 text-white position-relative">
-                            <div class="opacity-10 position-absolute end-0 bottom-0 mb-n3 me-n2">
-                                <i class="fas fa-users fa-6x"></i>
+                    <div class="card border-0 shadow-premium stats-card h-100 overflow-hidden" style="background: white; border-left: 5px solid #ffc107 !important;">
+                        <div class="card-body p-4 position-relative">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-muted small fw-bold mb-0">PELANGGAN</h6>
+                                <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2">
+                                    <i class="fas fa-users fa-lg"></i>
+                                </div>
                             </div>
-                            <h6 class="text-white text-opacity-75 small fw-bold mb-3">PELANGGAN</h6>
-                            <h3 class="fw-bold mb-0">{{ $total_users }}</h3>
+                            <h3 class="fw-bold mb-0 text-dark">{{ $total_users }}</h3>
+                            <div class="mt-2">
+                                <span class="badge bg-warning bg-opacity-20 text-dark x-small fw-bold">User Terdaftar</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -319,11 +259,8 @@
                     </a>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<style>
+    <style>
     .shadow-premium { box-shadow: 0 1rem 3rem rgba(0,0,0,.08) !important; }
     .x-small { font-size: 0.75rem; letter-spacing: 0.5px; }
     .nav-icon-box {

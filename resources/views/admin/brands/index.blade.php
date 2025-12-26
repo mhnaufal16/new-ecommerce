@@ -1,7 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
-<div class="container py-4">
+@section('admin_content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Brand Management</h2>
         <a href="{{ route('admin.brands.create') }}" class="btn btn-primary">
@@ -97,5 +96,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection

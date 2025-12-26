@@ -1,7 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
-<div class="container py-4">
+@section('admin_content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Store Settings</h2>
     </div>
@@ -18,7 +17,7 @@
         @method('PUT')
         
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                  <div class="list-group" id="settings-list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action active" id="list-general-list" data-bs-toggle="list" href="#list-general" role="tab" aria-controls="list-general">General</a>
                     <a class="list-group-item list-group-item-action" id="list-contact-list" data-bs-toggle="list" href="#list-contact" role="tab" aria-controls="list-contact">Contact Info</a>
@@ -31,7 +30,7 @@
                  </div>
             </div>
             
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="tab-content" id="nav-tabContent">
                     <!-- General Settings -->
                     <div class="tab-pane fade show active" id="list-general" role="tabpanel" aria-labelledby="list-general-list">
@@ -113,5 +112,4 @@
             </div>
         </div>
     </form>
-</div>
 @endsection
