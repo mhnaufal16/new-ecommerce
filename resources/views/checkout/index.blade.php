@@ -28,36 +28,10 @@
                     <div class="card-header bg-white py-4 px-4 d-flex justify-content-between align-items-center border-0">
                         <h5 class="mb-0 fw-bold"><i class="fas fa-map-marker-alt me-2 text-primary"></i>1. Alamat Pengiriman</h5>
                         <a href="{{ route('profile.edit') }}#addresses" class="btn btn-link text-primary text-decoration-none fw-bold small">Kelola Alamat</a>
-                        // Add click styling for payment cards when radio toggles
-                        document.querySelectorAll('.payment-selector').forEach(function(label) {
-                            var input = label.querySelector('input[type="radio"]');
-                            var card = label.querySelector('.payment-card');
-                            if (!input || !card) return;
-
-                            // initialize selected state
-                            if (input.checked) card.classList.add('selected');
-
-                            input.addEventListener('change', function() {
-                                // remove selected from all
-                                document.querySelectorAll('.payment-card.selected').forEach(function(c) { c.classList.remove('selected'); });
-                                if (input.checked) card.classList.add('selected');
-                            });
-
-                            // also toggle when label clicked (for cases where input change doesn't fire)
-                            label.addEventListener('click', function() {
-                                setTimeout(function() {
-                                    document.querySelectorAll('.payment-card.selected').forEach(function(c) { c.classList.remove('selected'); });
-                                    if (input.checked) card.classList.add('selected');
-                                }, 10);
-                            });
-                        });
                     </div>
                     <div class="card-body px-4 pb-4 pt-0">
                         @if($addresses->count() > 0)
-                <style>
-                    .payment-card.selected { border: 2px solid var(--primary-color) !important; box-shadow: 0 8px 30px rgba(13,110,253,0.06); }
-                    .payment-card .payment-icon img { display: block; }
-                </style>
+                
                         <div class="row g-3">
                             @foreach($addresses as $address)
                             <div class="col-md-6">
