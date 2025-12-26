@@ -165,7 +165,18 @@ class CheckoutController extends Controller
                 // Record coupon usage logic here if needed
             }
 
-            // 6. Clear Cart
+            // 6. Create Payment Record
+            $order->payments()->create([
+                'payment_method' => $paymentMethod->code,
+                'amount' => $order->grand_total,
+                'currency' => $order->currency,
+                'transaction_status' => 'pending',
+                'payment_details' => [
+                    'method_name' => $paymentMethod->name,
+                ]
+            ]);
+
+            // 7. Clear Cart
             $cart->items()->delete();
             $cart->update(['coupon_code' => null]);
 

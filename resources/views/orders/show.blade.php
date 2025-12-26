@@ -182,7 +182,7 @@
                     <div class="alert alert-warning border-0 small mb-0 rounded-4 shadow-sm text-start">
                         <i class="fas fa-info-circle me-2"></i> Silakan selesaikan pembayaran agar pesanan Anda dapat segera kami proses.
                     </div>
-                    <button class="btn btn-primary w-100 rounded-pill py-3 fw-bold mt-4 shadow-sm">Bayar Sekarang</button>
+                    <a href="{{ route('orders.pay', $order) }}" class="btn btn-primary w-100 rounded-pill py-3 fw-bold mt-4 shadow-sm">Bayar Sekarang</a>
                     @else
                     <div class="alert alert-success border-0 small mb-0 rounded-4 shadow-sm text-start">
                         <i class="fas fa-check-circle me-2"></i> Pembayaran berhasil dilakukan pada {{ $order->updated_at->format('d M Y, H:i') }}.

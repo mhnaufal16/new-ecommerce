@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Order Routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
     // Review Routes
