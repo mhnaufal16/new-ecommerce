@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderAddress extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'order_id',
         'address_type',

@@ -111,11 +111,27 @@ class CheckoutController extends Controller
 
             // 2. Create Order Items
             foreach ($cart->items as $item) {
+                // Get SKU from variant or product
+                $sku = $item->variant ? $item->variant->sku : $item->product->sku;
+                
+                // Get variant attributes for history
+                $variantAttributes = null;
+                if ($item->variant) {
+                    $variantAttributes = $item->variant->attributeValues->map(function ($value) {
+                        return [
+                            'attribute' => $value->attribute->name,
+                            'value' => $value->value
+                        ];
+                    })->toArray();
+                }
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
                     'variant_id' => $item->variant_id,
+                    'sku' => $sku,
                     'product_name' => $item->product_name,
+                    'variant_attributes' => $variantAttributes,
                     'quantity' => $item->quantity,
                     'unit_price' => $item->price,
                     'row_total' => $item->total,
