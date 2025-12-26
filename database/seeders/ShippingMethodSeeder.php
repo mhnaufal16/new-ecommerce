@@ -11,9 +11,10 @@ class ShippingMethodSeeder extends Seeder
 {
     public function run()
     {
-        ShippingMethod::truncate();
-        ShippingZone::truncate();
-        ShippingRate::truncate();
+        // Use delete() instead of truncate() to avoid foreign key constraint issues on MySQL
+        ShippingRate::query()->delete();
+        ShippingZone::query()->delete();
+        ShippingMethod::query()->delete();
 
         // Create shipping methods
         $jne = ShippingMethod::create([
