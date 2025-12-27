@@ -17,6 +17,14 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Favicon -->
+    @php
+        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', '/favicon.png');
+        $logo = \App\Models\Setting::getValue('general', 'store_logo', '/images/logo.png');
+    @endphp
+    <link rel="icon" type="image/png" href="{{ asset($favicon) }}?v=1">
+    <link rel="shortcut icon" href="{{ asset($favicon) }}?v=1">
+    
     <style>
         :root {
             --primary-color: #0d6efd;
@@ -168,8 +176,8 @@
 <body>
     <div class="auth-card">
         <div class="auth-header">
-            <div class="auth-icon-box">
-                <i class="fas fa-store"></i>
+            <div class="auth-icon-box" style="overflow: hidden; background: transparent;">
+                <img src="{{ asset($logo) }}" alt="{{ config('app.name') }} Logo" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
             <h2 class="auth-title">{{ config('app.name') }}</h2>
             <p class="auth-subtitle">

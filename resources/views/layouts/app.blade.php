@@ -19,6 +19,13 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Favicon -->
+    @php
+        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', '/favicon.png');
+    @endphp
+    <link rel="icon" type="image/png" href="{{ asset($favicon) }}?v=1">
+    <link rel="shortcut icon" href="{{ asset($favicon) }}?v=1">
+    
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -53,16 +60,19 @@
         }
 
         .site-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(13,110,253,1), rgba(0,67,168,1));
+            width: 48px;
+            height: 48px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            box-shadow: 0 6px 18px rgba(13,110,253,0.18);
             flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .site-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .brand-text {
@@ -135,10 +145,8 @@
         }
 
         footer .site-logo {
-            width:44px; height:44px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
-            background: linear-gradient(135deg,#0d6efd,#0043a8);
-            box-shadow: 0 8px 30px rgba(13,110,253,0.25);
-            color: #ffffff;
+            width:56px; height:56px; display:inline-flex; align-items:center; justify-content:center;
+            overflow: hidden;
         }
 
         .footer-links a { display: block; color: #cbd5e1; text-decoration: none; margin-bottom: 0.6rem; transition: all 0.2s; }
@@ -168,13 +176,34 @@
         footer .footer-brand .small.text-muted { color: #cbd5e1 !important; opacity: 1 !important; }
 
         .nav-link {
-            font-weight: 500;
-            color: #555 !important;
-            padding: 0.5rem 1rem !important;
+            font-weight: 600;
+            color: #4b5563 !important;
+            padding: 0.5rem 1.25rem !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border-radius: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            background: rgba(13, 110, 253, 0.05);
+        }
+
+        .nav-link:hover i {
+            transform: translateY(-2px);
         }
 
         .nav-link.active {
             color: var(--primary-color) !important;
+            background: rgba(13, 110, 253, 0.08);
         }
         
 
@@ -231,7 +260,10 @@
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
                 <span class="site-logo">
-                    <i class="fas fa-store fa-lg"></i>
+                    @php
+                        $logo = \App\Models\Setting::getValue('general', 'store_logo', '/images/logo.png');
+                    @endphp
+                    <img src="{{ asset($logo) }}" alt="{{ config('app.name') }} Logo">
                 </span>
                 <span class="brand-text">{{ config('app.name', 'E-Commerce') }}</span>
             </a>
@@ -354,7 +386,7 @@
                 <div class="col-12 col-md-4">
                     <div class="footer-brand">
                         <span class="site-logo">
-                            <i class="fas fa-store"></i>
+                            <img src="{{ asset(\App\Models\Setting::getValue('general', 'store_logo', '/images/logo.png')) }}" alt="{{ config('app.name') }} Logo">
                         </span>
                         <div>
                             <div class="brand-text">{{ config('app.name', 'Ecommerce Store') }}</div>

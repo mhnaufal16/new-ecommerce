@@ -18,7 +18,7 @@ class SettingSeeder extends Seeder
             ['group' => 'general', 'key' => 'store_phone', 'value' => '021-12345678', 'type' => 'string', 'is_public' => true],
             ['group' => 'general', 'key' => 'store_address', 'value' => 'Jl. Sudirman No. 123, Jakarta', 'type' => 'string', 'is_public' => true],
             ['group' => 'general', 'key' => 'store_logo', 'value' => '/storage/logo.png', 'type' => 'string', 'is_public' => true],
-            ['group' => 'general', 'key' => 'store_favicon', 'value' => '/storage/favicon.ico', 'type' => 'string', 'is_public' => true],
+            ['group' => 'general', 'key' => 'store_favicon', 'value' => '/storage/favicon.png', 'type' => 'string', 'is_public' => true],
             ['group' => 'general', 'key' => 'store_currency', 'value' => 'IDR', 'type' => 'string', 'is_public' => true],
             ['group' => 'general', 'key' => 'store_timezone', 'value' => 'Asia/Jakarta', 'type' => 'string', 'is_public' => false],
             
