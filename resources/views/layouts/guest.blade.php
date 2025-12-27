@@ -179,7 +179,7 @@
     <div class="auth-card">
         <div class="auth-header">
             <div class="auth-icon-box" style="overflow: hidden; background: transparent;">
-                <img src="{{ asset($logo) }}" alt="{{ config('app.name') }} Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <img src="{{ asset($logoPath) }}?v={{ time() }}" alt="{{ config('app.name') }} Logo" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
             <h2 class="auth-title">{{ config('app.name') }}</h2>
             <p class="auth-subtitle">

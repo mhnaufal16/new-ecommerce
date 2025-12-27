@@ -15,6 +15,7 @@ class Product extends Model
         'name',
         'slug',
         'brand_id',
+        'vendor_id',
         'short_description',
         'description',
         'specifications',
@@ -49,6 +50,11 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(User::class, 'vendor_id')->where('type', 'vendor');
     }
 
     public function categories()

@@ -43,6 +43,11 @@ class User extends Authenticatable
         return $this->hasMany(UserAddress::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'vendor_id');
+    }
+
     public function primaryAddress()
     {
         return $this->hasOne(UserAddress::class)->where('is_primary', true);

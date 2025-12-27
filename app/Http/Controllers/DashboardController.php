@@ -18,7 +18,7 @@ class DashboardController extends Controller
         if ($user->type === 'admin') {
             return $this->adminDashboard($user);
         } elseif ($user->type === 'vendor') {
-            return $this->vendorDashboard($user);
+            return redirect()->route('vendor.dashboard');
         } else {
             return $this->customerDashboard($user);
         }
