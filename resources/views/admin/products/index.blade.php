@@ -56,6 +56,7 @@
                             <th>SKU</th>
                             <th>HARGA</th>
                             <th>STOK</th>
+                            <th>PENJUAL</th>
                             <th>STATUS</th>
                             <th class="pe-4 text-end">AKSI</th>
                         </tr>
@@ -89,6 +90,18 @@
                                     </div>
                                 @else
                                     <span class="text-muted small">-</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($product->vendor)
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px;">
+                                            <i class="fas fa-store x-small"></i>
+                                        </div>
+                                        <span class="small fw-bold">{{ $product->vendor->name }}</span>
+                                    </div>
+                                @else
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-2 py-1 small fw-bold">SYSTEM</span>
                                 @endif
                             </td>
                             <td>

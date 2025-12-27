@@ -111,6 +111,21 @@
                 <p class="text-muted border-start ps-3 mb-4">{{ $product->short_description }}</p>
                 @endif
 
+                <!-- Vendor / Seller Info -->
+                <div class="vendor-info-box mb-4 p-3 bg-white border rounded-4 shadow-sm d-flex align-items-center">
+                    <div class="vendor-avatar bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                        <i class="fas fa-store fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-muted x-small text-uppercase fw-bold ls-1 mb-1">Penjual</div>
+                        <div class="d-flex align-items-center">
+                            <h6 class="fw-bold mb-0 me-2">{{ $product->vendor->name ?? config('app.name') . ' Official' }}</h6>
+                            <span class="badge bg-success bg-opacity-10 text-success small rounded-pill px-2">Verified Store</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-outline-primary rounded-pill px-3">Kunjungi Toko</a>
+                </div>
+
                 <form id="addToCartForm" action="{{ route('cart.add', $product) }}" method="POST">
                     @csrf
 

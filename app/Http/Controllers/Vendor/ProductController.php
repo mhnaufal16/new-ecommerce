@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -11,26 +11,25 @@ use App\Models\Price;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['brand', 'vendor', 'categories', 'inventory', 'activePrice'])
+        $products = Product::where('vendor_id', auth()->id())
+            ->with(['brand', 'categories', 'inventory', 'activePrice'])
             ->latest()
             ->paginate(10);
             
-        return view('admin.products.index', compact('products'));
+        return view('vendor.products.index', compact('products'));
     }
 
     public function create()
     {
         $categories = Category::all();
         $brands = Brand::all();
-        $vendors = \App\Models\User::where('type', 'vendor')->get();
-        return view('admin.products.create', compact('categories', 'brands', 'vendors'));
+        return view('vendor.products.create', compact('categories', 'brands'));
     }
 
     public function store(Request $request)
@@ -39,7 +38,6 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku',
             'brand_id' => 'nullable|exists:brands,id',
-            'vendor_id' => 'nullable|exists:users,id',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'short_description' => 'required|string',
@@ -47,8 +45,6 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'status' => 'required|in:draft,active,inactive',
-            'is_featured' => 'nullable|in:0,1,on,off,true,false',
-            'is_new' => 'nullable|in:0,1,on,off,true,false',
             'image' => 'nullable|image|max:2048'
         ]);
 
@@ -59,19 +55,15 @@ class ProductController extends Controller
             $product->slug = Str::slug($validated['name']);
             $product->sku = $validated['sku'];
             $product->brand_id = $validated['brand_id'] ?: null;
-            $product->vendor_id = $validated['vendor_id'] ?: null;
+            $product->vendor_id = auth()->id(); // Always set to current vendor
             $product->short_description = $validated['short_description'];
             $product->description = $validated['description'];
             $product->status = $validated['status'];
-            $product->is_featured = $request->has('is_featured');
-            $product->is_new = $request->has('is_new');
-            $product->type = 'simple'; // Default to simple for now
+            $product->type = 'simple';
             $product->save();
 
-            // Categories
             $product->categories()->sync($request->input('categories', []));
 
-            // Price
             Price::create([
                 'product_id' => $product->id,
                 'base_price' => $validated['price'],
@@ -79,7 +71,6 @@ class ProductController extends Controller
                 'is_active' => true
             ]);
 
-            // Inventory
             Inventory::create([
                 'product_id' => $product->id,
                 'sku' => $validated['sku'],
@@ -87,7 +78,6 @@ class ProductController extends Controller
                 'stock_status' => $validated['quantity'] > 0 ? 'in_stock' : 'out_of_stock'
             ]);
 
-            // Image Upload
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('products', 'public');
                 $product->images()->create([
@@ -98,38 +88,40 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            
-            return redirect()->route('admin.products.index')
-                ->with('success', 'Product created successfully.');
+            return redirect()->route('vendor.products.index')->with('success', 'Produk berhasil ditambahkan.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Product creation failed: ' . $e->getMessage(), [
-                'exception' => $e,
-                'input' => $request->all()
-            ]);
-            return back()->with('error', 'Error creating product: ' . $e->getMessage())
-                ->withInput();
+            Log::error('Vendor product creation failed: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menambah produk: ' . $e->getMessage())->withInput();
         }
     }
 
     public function edit(Product $product)
     {
+        // Security check
+        if ($product->vendor_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $categories = Category::all();
         $brands = Brand::all();
-        $vendors = \App\Models\User::where('type', 'vendor')->get();
         $product->load(['categories', 'activePrice', 'inventory']);
         
-        return view('admin.products.edit', compact('product', 'categories', 'brands', 'vendors'));
+        return view('vendor.products.edit', compact('product', 'categories', 'brands'));
     }
 
     public function update(Request $request, Product $product)
     {
+        // Security check
+        if ($product->vendor_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku,' . $product->id,
             'brand_id' => 'nullable|exists:brands,id',
-            'vendor_id' => 'nullable|exists:users,id',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'short_description' => 'required|string',
@@ -137,8 +129,6 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'status' => 'required|in:draft,active,inactive',
-            'is_featured' => 'nullable|in:0,1,on,off,true,false',
-            'is_new' => 'nullable|in:0,1,on,off,true,false',
             'image' => 'nullable|image|max:2048'
         ]);
 
@@ -148,52 +138,27 @@ class ProductController extends Controller
             $product->slug = Str::slug($validated['name']);
             $product->sku = $validated['sku'];
             $product->brand_id = $validated['brand_id'] ?: null;
-            $product->vendor_id = $validated['vendor_id'] ?: null;
             $product->short_description = $validated['short_description'];
             $product->description = $validated['description'];
             $product->status = $validated['status'];
-            $product->is_featured = $request->has('is_featured');
-            $product->is_new = $request->has('is_new');
             $product->save();
 
-            // Categories
             $product->categories()->sync($request->input('categories', []));
 
-            // Price - Update existing active price or create new one
-            $currentPrice = $product->activePrice;
-            if ($currentPrice) {
-                $currentPrice->update(['base_price' => $validated['price']]);
-            } else {
-                Price::create([
-                    'product_id' => $product->id,
-                    'base_price' => $validated['price'],
-                    'currency' => 'IDR',
-                    'is_active' => true
-                ]);
+            if ($product->activePrice) {
+                $product->activePrice->update(['base_price' => $validated['price']]);
             }
 
-            // Inventory
-            $inventory = $product->inventory;
-            if ($inventory) {
-                $inventory->update([
-                    'sku' => $validated['sku'],
-                    'quantity' => $validated['quantity'],
-                    'stock_status' => $validated['quantity'] > 0 ? 'in_stock' : 'out_of_stock'
-                ]);
-            } else {
-                Inventory::create([
-                    'product_id' => $product->id,
+            if ($product->inventory) {
+                $product->inventory->update([
                     'sku' => $validated['sku'],
                     'quantity' => $validated['quantity'],
                     'stock_status' => $validated['quantity'] > 0 ? 'in_stock' : 'out_of_stock'
                 ]);
             }
 
-            // Image Upload
             if ($request->hasFile('image')) {
-                // For now, let's just add new one as main and demote others
                 $product->images()->update(['is_main' => false]);
-                
                 $path = $request->file('image')->store('products', 'public');
                 $product->images()->create([
                     'image_url' => $path,
@@ -203,29 +168,26 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            
-            return redirect()->route('admin.products.index')
-                ->with('success', 'Product updated successfully.');
+            return redirect()->route('vendor.products.index')->with('success', 'Produk berhasil diperbarui.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Product update failed: ' . $e->getMessage(), [
-                'exception' => $e,
-                'input' => $request->all()
-            ]);
-            return back()->with('error', 'Error updating product: ' . $e->getMessage())
-                ->withInput();
+            Log::error('Vendor product update failed: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memperbarui produk: ' . $e->getMessage())->withInput();
         }
     }
 
     public function destroy(Product $product)
     {
+        if ($product->vendor_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         try {
             $product->delete();
-            return redirect()->route('admin.products.index')
-                ->with('success', 'Product deleted successfully.');
+            return redirect()->route('vendor.products.index')->with('success', 'Produk berhasil dihapus.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error deleting product: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghapus produk: ' . $e->getMessage());
         }
     }
 }

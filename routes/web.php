@@ -39,7 +39,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Vendor Routes
-    Route::get('/vendor/dashboard', [\App\Http\Controllers\Vendor\DashboardController::class, 'index'])->name('vendor.dashboard');
+    Route::prefix('vendor')->name('vendor.')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Vendor\DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('products', \App\Http\Controllers\Vendor\ProductController::class);
+        Route::resource('orders', \App\Http\Controllers\Vendor\OrderController::class)->only(['index', 'show']);
+    });
     
     // Cart Routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

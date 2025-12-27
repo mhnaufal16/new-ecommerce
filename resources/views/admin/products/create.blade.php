@@ -111,6 +111,18 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                
+                                <div class="mb-3">
+                                    <label for="vendor_id" class="form-label">Vendor <span class="text-muted small">(Seller)</span></label>
+                                    <select class="form-select" id="vendor_id" name="vendor_id">
+                                        <option value="">System (Admin)</option>
+                                        @foreach($vendors as $vendor)
+                                            <option value="{{ $vendor->id }}" {{ old('vendor_id') == $vendor->id ? 'selected' : '' }}>
+                                                {{ $vendor->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="is_featured" name="is_featured" {{ old('is_featured') ? 'checked' : '' }}>
