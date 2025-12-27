@@ -21,7 +21,8 @@
     
     <!-- Favicon -->
     @php
-        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', '/favicon.png');
+        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', 'favicon.png');
+        $favicon = ltrim($favicon, '/');
     @endphp
     <link rel="icon" type="image/png" href="{{ asset($favicon) }}?v=1">
     <link rel="shortcut icon" href="{{ asset($favicon) }}?v=1">
@@ -261,7 +262,8 @@
             <a class="navbar-brand" href="{{ route('home') }}">
                 <span class="site-logo">
                     @php
-                        $logo = \App\Models\Setting::getValue('general', 'store_logo', '/images/logo.png');
+                        $logo = \App\Models\Setting::getValue('general', 'store_logo', 'images/logo.png');
+                        $logo = ltrim($logo, '/');
                     @endphp
                     <img src="{{ asset($logo) }}" alt="{{ config('app.name') }} Logo">
                 </span>

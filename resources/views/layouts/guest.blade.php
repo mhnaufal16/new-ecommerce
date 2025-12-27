@@ -19,8 +19,10 @@
     
     <!-- Favicon -->
     @php
-        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', '/favicon.png');
-        $logo = \App\Models\Setting::getValue('general', 'store_logo', '/images/logo.png');
+        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', 'favicon.png');
+        $favicon = ltrim($favicon, '/');
+        $logo = \App\Models\Setting::getValue('general', 'store_logo', 'images/logo.png');
+        $logo = ltrim($logo, '/');
     @endphp
     <link rel="icon" type="image/png" href="{{ asset($favicon) }}?v=1">
     <link rel="shortcut icon" href="{{ asset($favicon) }}?v=1">

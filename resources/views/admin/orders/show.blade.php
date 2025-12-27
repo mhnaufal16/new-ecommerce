@@ -89,34 +89,36 @@
                     <h5 class="mb-0 fw-bold"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Informasi Pengiriman & Penagihan</h5>
                 </div>
                 <div class="card-body p-4">
-                    <div class="row g-4">
-                        <div class="col-md-6">
+                    <div class="row g-4 d-flex align-items-stretch">
+                        <div class="col-md-6 d-flex flex-column">
                             <h6 class="fw-bold text-dark mb-3">
                                 <span class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-2">
                                     <i class="fas fa-truck-loading"></i>
                                 </span> Alamat Pengiriman
                             </h6>
-                            <div class="p-3 rounded-4 border bg-light bg-opacity-50">
+                            <div class="p-3 rounded-4 border bg-light bg-opacity-50 flex-grow-1">
                                 @if($order->shippingAddress)
                                     <p class="mb-1 fw-bold">{{ $order->shippingAddress->recipient_name }}</p>
-                                    <p class="mb-2 small text-muted">{{ $order->shippingAddress->phone }}</p>
+                                    <p class="mb-2 small text-muted"><i class="fas fa-phone-alt me-2 fa-xs"></i>{{ $order->shippingAddress->phone }}</p>
                                     <p class="mb-0 small text-muted lh-base">
                                         {{ $order->shippingAddress->address }}<br>
                                         {{ $order->shippingAddress->subdistrict }}, {{ $order->shippingAddress->district }}<br>
                                         {{ $order->shippingAddress->city_name }}, {{ $order->shippingAddress->province_name }} {{ $order->shippingAddress->postal_code }}
                                     </p>
                                 @else
-                                    <p class="text-muted small mb-0 italic">Sama dengan penagihan</p>
+                                    <div class="d-flex align-items-center h-100 justify-content-center py-4">
+                                        <p class="text-muted small mb-0 italic"><i class="fas fa-info-circle me-2"></i>Data pengiriman tidak tersedia</p>
+                                    </div>
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 d-flex flex-column">
                             <h6 class="fw-bold text-dark mb-3">
                                 <span class="bg-success bg-opacity-10 text-success p-2 rounded-3 me-2">
                                     <i class="fas fa-receipt"></i>
                                 </span> Alamat Penagihan
                             </h6>
-                            <div class="p-3 rounded-4 border bg-light bg-opacity-50 h-100">
+                            <div class="p-3 rounded-4 border bg-light bg-opacity-50 flex-grow-1">
                                 @if($order->billingAddress)
                                     <p class="mb-1 fw-bold">{{ $order->billingAddress->recipient_name }}</p>
                                     <p class="mb-0 small text-muted lh-base">
@@ -124,7 +126,12 @@
                                         {{ $order->billingAddress->city_name }}, {{ $order->billingAddress->province_name }}
                                     </p>
                                 @else
-                                    <p class="text-muted small mb-0 italic">Tidak ada alamat penagihan</p>
+                                    <div class="d-flex align-items-center h-100 justify-content-center py-4 text-center">
+                                        <div>
+                                            <i class="fas fa-copy text-muted mb-2 d-block opacity-50" style="font-size: 1.5rem;"></i>
+                                            <p class="text-muted small mb-0">Sama dengan Alamat Pengiriman</p>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         </div>
