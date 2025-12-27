@@ -21,11 +21,11 @@
     
     <!-- Favicon -->
     @php
-        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', 'favicon.png');
-        $favicon = ltrim($favicon, '/');
+        $faviconSetting = \App\Models\Setting::getValue('general', 'store_favicon', 'favicon.png');
+        $faviconPath = ltrim($faviconSetting, '/');
     @endphp
-    <link rel="icon" type="image/png" href="{{ asset($favicon) }}?v=1">
-    <link rel="shortcut icon" href="{{ asset($favicon) }}?v=1">
+    <link rel="icon" type="image/png" href="{{ asset($faviconPath) }}?v={{ time() }}">
+    <link rel="shortcut icon" href="{{ asset($faviconPath) }}?v={{ time() }}">
     
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -262,10 +262,10 @@
             <a class="navbar-brand" href="{{ route('home') }}">
                 <span class="site-logo">
                     @php
-                        $logo = \App\Models\Setting::getValue('general', 'store_logo', 'images/logo.png');
-                        $logo = ltrim($logo, '/');
+                        $logoSetting = \App\Models\Setting::getValue('general', 'store_logo', 'images/logo.png');
+                        $logoPath = ltrim($logoSetting, '/');
                     @endphp
-                    <img src="{{ asset($logo) }}" alt="{{ config('app.name') }} Logo">
+                    <img src="{{ asset($logoPath) }}" alt="{{ config('app.name') }} Logo">
                 </span>
                 <span class="brand-text">{{ config('app.name', 'E-Commerce') }}</span>
             </a>

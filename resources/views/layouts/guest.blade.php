@@ -19,13 +19,13 @@
     
     <!-- Favicon -->
     @php
-        $favicon = \App\Models\Setting::getValue('general', 'store_favicon', 'favicon.png');
-        $favicon = ltrim($favicon, '/');
-        $logo = \App\Models\Setting::getValue('general', 'store_logo', 'images/logo.png');
-        $logo = ltrim($logo, '/');
+        $faviconSetting = \App\Models\Setting::getValue('general', 'store_favicon', 'favicon.png');
+        $faviconPath = ltrim($faviconSetting, '/');
+        $logoSetting = \App\Models\Setting::getValue('general', 'store_logo', 'images/logo.png');
+        $logoPath = ltrim($logoSetting, '/');
     @endphp
-    <link rel="icon" type="image/png" href="{{ asset($favicon) }}?v=1">
-    <link rel="shortcut icon" href="{{ asset($favicon) }}?v=1">
+    <link rel="icon" type="image/png" href="{{ asset($faviconPath) }}?v={{ time() }}">
+    <link rel="shortcut icon" href="{{ asset($faviconPath) }}?v={{ time() }}">
     
     <style>
         :root {
