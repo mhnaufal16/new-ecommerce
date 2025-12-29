@@ -96,6 +96,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
 
         Route::get('analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+        
+        Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+        Route::patch('coupons/{coupon}/toggle', [\App\Http\Controllers\Admin\CouponController::class, 'toggle'])->name('coupons.toggle');
     });
 
     // Wishlist Routes

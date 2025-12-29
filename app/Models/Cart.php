@@ -157,8 +157,11 @@ class Cart extends Model
     {
         $coupon = Coupon::where('code', $couponCode)
                        ->active()
-                       ->validForCart($this)
                        ->first();
+
+        if (!$coupon || !$coupon->isValidForCart($this)) {
+            return false;
+        }
 
         if (!$coupon) {
             return false;

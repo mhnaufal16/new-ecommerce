@@ -48,6 +48,11 @@
                     <div class="nav-icon-box me-3"><i class="fas fa-folder"></i></div>
                     <span class="fw-bold">Kategori</span>
                 </a>
+                <a href="{{ route('admin.coupons.index') }}" 
+                   class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->routeIs('admin.coupons.*') ? 'active shadow-sm' : '' }}">
+                    <div class="nav-icon-box me-3"><i class="fas fa-ticket-alt"></i></div>
+                    <span class="fw-bold">Kupon</span>
+                </a>
                 <a href="{{ route('admin.orders.index') }}" 
                    class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->routeIs('admin.orders.*') ? 'active shadow-sm' : '' }}">
                     <div class="nav-icon-box me-3"><i class="fas fa-shopping-bag"></i></div>

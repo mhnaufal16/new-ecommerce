@@ -152,6 +152,13 @@
                             <span>Pajak (Estimasi)</span>
                             <span>Rp {{ number_format($cart->tax_amount, 0, ',', '.') }}</span>
                         </div>
+
+                        @if($cart->discount_amount > 0)
+                        <div class="d-flex justify-content-between mb-4 text-success">
+                            <span><i class="fas fa-tag me-2"></i>Diskon ({{ $cart->coupon_code }})</span>
+                            <span class="fw-bold">- Rp {{ number_format($cart->discount_amount, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
                         
                         <hr class="border-dashed mb-4">
                         

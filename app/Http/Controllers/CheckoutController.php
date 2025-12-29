@@ -162,7 +162,16 @@ class CheckoutController extends Controller
 
             // 5. Handle Coupon (if any)
             if ($cart->coupon_code) {
-                // Record coupon usage logic here if needed
+                $coupon = \App\Models\Coupon::where('code', $cart->coupon_code)->first();
+                if ($coupon) {
+                    \App\Models\CouponUsage::create([
+                        'coupon_id' => $coupon->id,
+                        'user_id' => $user->id,
+                        'order_id' => $order->id,
+                        'discount_amount' => $cart->discount_amount,
+                        'used_at' => now(),
+                    ]);
+                }
             }
 
             // 6. Create Payment Record

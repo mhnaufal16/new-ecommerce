@@ -154,6 +154,14 @@ class Coupon extends Model
             }
         }
 
+        // Check per-customer usage limit
+        if ($this->usage_per_customer && $cart->user_id) {
+            $userUsageCount = $this->usages()->where('user_id', $cart->user_id)->count();
+            if ($userUsageCount >= $this->usage_per_customer) {
+                return false;
+            }
+        }
+
         return true;
     }
 
