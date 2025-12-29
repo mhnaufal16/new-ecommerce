@@ -166,6 +166,21 @@
                             <span class="h6 fw-bold mb-0 text-dark">Total Keseluruhan</span>
                             <span class="h4 fw-bold mb-0 text-primary">Rp {{ number_format($cart->grand_total, 0, ',', '.') }}</span>
                         </div>
+                        
+                        {{-- DEBUG INFO --}}
+                        <div class="alert alert-warning small">
+                            DEBUG: <br>
+                            Coupon Code in Cart: {{ $cart->coupon_code }} <br>
+                            Coupon Relation: {{ $cart->coupon ? 'Found' : 'NULL' }} <br>
+                            Subtotal: {{ $cart->subtotal }} <br>
+                            Discount Amount: {{ $cart->discount_amount }} <br>
+                            @if($cart->coupon)
+                                Coupon Type: {{ $cart->coupon->discount_type }} <br>
+                                Coupon Value: {{ $cart->coupon->discount_value }} <br>
+                                Min Order: {{ $cart->coupon->min_order_amount }} <br>
+                            @endif
+                        </div>
+                        {{-- END DEBUG --}}
 
                         <!-- Coupon Input -->
                         <div class="mb-4">

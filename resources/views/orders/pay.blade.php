@@ -17,6 +17,21 @@
                 </nav>
                 <h2 class="fw-bold mb-2">Selesaikan Pembayaran</h2>
                 <p class="text-muted">Silakan lakukan pembayaran sebesar <span class="fw-bold text-primary">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span></p>
+
+                @if($payment->verification_status === 'rejected')
+                <div class="alert alert-danger border-0 rounded-4 shadow-sm text-start py-3 px-4 mt-4">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="fw-bold mb-1">Bukti Pembayaran Ditolak</h6>
+                            <p class="mb-0 small">{{ $payment->rejection_reason }}</p>
+                            <div class="mt-2 small text-danger fw-bold">Silakan unggah ulang bukti pembayaran yang valid (Jelas, terbaca, dan sesuai nominal).</div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
 
             <!-- Payment Method Card -->

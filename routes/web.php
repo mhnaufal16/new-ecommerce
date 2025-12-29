@@ -22,6 +22,32 @@ Route::get('/debug-admin', function () {
     return "Admin user exists: " . $admin->name;
 });
 
+Route::get('/debug-coupon', function () {
+    $coupon = \App\Models\Coupon::where('code', 'WELCOME1')->first();
+    if (!$coupon) return "Coupon not found";
+    
+    $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
+    if (!$cart) return "Cart not found for user " . auth()->id();
+
+    $isValid = $coupon->isValidForCart($cart);
+    
+    return [
+        'coupon' => $coupon->toArray(),
+        'is_active_check' => $coupon->is_active,
+        'starts_at_check' => $coupon->starts_at,
+        'expires_at_check' => $coupon->expires_at,
+        'now' => now()->toDateTimeString(),
+        'cart_subtotal' => $cart->subtotal,
+        'isValidForCart' => $isValid,
+        'why_invalid' => [
+            'is_active' => $coupon->is_active,
+            'date_valid' => $coupon->isValid(), 
+            'min_order' => ($coupon->min_order_amount && $cart->subtotal < $coupon->min_order_amount),
+            'user_usage' => $coupon->usages()->where('user_id', auth()->id())->count(),
+        ]
+    ];
+});
+
 // Public Product Routes (accessible to everyone)
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/featured', [ProductController::class, 'featured'])->name('products.featured');

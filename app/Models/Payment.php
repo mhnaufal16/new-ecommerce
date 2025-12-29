@@ -150,4 +150,14 @@ class Payment extends Model
 
         return $labels[$this->payment_method] ?? $this->payment_method;
     }
+
+    public function getVerificationStatusAttribute()
+    {
+        return $this->payment_details['verification_status'] ?? null;
+    }
+
+    public function getRejectionReasonAttribute()
+    {
+        return $this->payment_details['rejection_reason'] ?? null;
+    }
 }

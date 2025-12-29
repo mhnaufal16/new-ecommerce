@@ -130,7 +130,13 @@ class CartController extends Controller
             return back()->with('error', 'Keranjang kosong.');
         }
 
-        if ($cart->applyCoupon($request->coupon_code)) {
+        \Illuminate\Support\Facades\Log::info('Applying coupon: ' . $request->coupon_code);
+        
+        $result = $cart->applyCoupon($request->coupon_code);
+        
+        \Illuminate\Support\Facades\Log::info('Coupon application result: ' . ($result ? 'success' : 'failure'));
+
+        if ($result) {
             return back()->with('success', 'Kupon berhasil diterapkan.');
         }
 
