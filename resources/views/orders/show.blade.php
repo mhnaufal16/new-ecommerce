@@ -126,6 +126,23 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Customer Confirmation Button --}}
+                @if($order->payment_status === 'paid' && $order->status !== 'completed' && in_array($order->shipping_status, ['shipped', 'delivered']))
+                <div class="mt-3">
+                    <form action="{{ route('orders.mark-received', $order) }}" method="POST" onsubmit="return confirm('Konfirmasi bahwa pesanan sudah Anda terima dengan baik?')">
+                        @csrf
+                        <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-box-check"></i>
+                            <span>Barang Sudah Diterima</span>
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                        <div class="text-center mt-2">
+                            <small class="text-muted">Klik tombol di atas jika barang sudah sampai dengan aman</small>
+                        </div>
+                    </form>
+                </div>
+                @endif
             </div>
         </div>
 
@@ -197,7 +214,7 @@
                             <i class="fas fa-eye me-1"></i> Lihat Bukti Saya
                         </button>
                         <div class="collapse mt-2" id="viewProof">
-                            <img src="{{ asset('storage/' . ($payment->proof_of_payment ?? '')) }}" class="img-fluid rounded-3 border">
+                            <img src="{{ asset('storage/' . ($payment->payment_details['proof_of_payment'] ?? '')) }}" class="img-fluid rounded-3 border">
                         </div>
                     </div>
 
@@ -213,12 +230,17 @@
                         <i class="fas fa-check-circle me-2"></i> Pembayaran berhasil diverifikasi pada {{ $order->updated_at->format('d M Y, H:i') }}.
                     </div>
 
-                        @if($order->status !== 'completed' && $order->shipping_status === 'shipped')
-                        <form action="{{ route('orders.mark-received', $order) }}" method="POST" onsubmit="return confirm('Konfirmasi pesanan telah diterima?')" class="mt-4">
+                        @if($order->status !== 'completed' && in_array($order->shipping_status, ['shipped', 'delivered']))
+                        <form action="{{ route('orders.mark-received', $order) }}" method="POST" onsubmit="return confirm('Konfirmasi bahwa pesanan sudah Anda terima dengan baik?')" class="mt-4">
                             @csrf
-                            <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold shadow-sm">
-                                <i class="fas fa-box-open me-2"></i> Konfirmasi Pesanan Diterima
+                            <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2 mx-auto">
+                                <i class="fas fa-box-check"></i>
+                                <span>Barang Sudah Diterima</span>
+                                <i class="fas fa-check-circle"></i>
                             </button>
+                            <div class="text-center mt-2">
+                                <small class="text-muted">Klik jika barang sudah sampai dengan aman</small>
+                            </div>
                         </form>
                         @endif
                     @endif

@@ -83,6 +83,8 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
         Route::patch('orders/{order}/payment-status', [\App\Http\Controllers\Admin\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status');
         Route::patch('orders/{order}/shipping-status', [\App\Http\Controllers\Admin\OrderController::class, 'updateShippingStatus'])->name('orders.update-shipping-status');
+        Route::patch('orders/{order}/approve-payment', [\App\Http\Controllers\Admin\OrderController::class, 'approvePayment'])->name('orders.approve-payment');
+        Route::patch('orders/{order}/reject-payment', [\App\Http\Controllers\Admin\OrderController::class, 'rejectPayment'])->name('orders.reject-payment');
 
         Route::get('reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
         Route::patch('reviews/{review}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');

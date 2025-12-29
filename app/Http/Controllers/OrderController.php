@@ -84,21 +84,20 @@ class OrderController extends Controller
             $path = $request->file('payment_proof')->store('payment_proofs', 'public');
 
             DB::transaction(function () use ($order, $payment, $path) {
-                // Update Payment record
+                // Update Payment record - store proof in payment_details since column doesn't exist
                 if ($payment) {
                     $payment->update([
-                        'proof_of_payment' => $path,
-                        'verification_status' => 'pending',
                         'payment_details' => array_merge($payment->payment_details ?? [], [
+                            'proof_of_payment' => $path,
+                            'verification_status' => 'pending',
                             'uploaded_at' => now()->toDateTimeString(),
                         ])
                     ]);
                 }
 
-                // Update Order record
-                $order->update([
-                    'payment_status' => 'waiting_verification',
-                ]);
+
+                // Note: Order payment_status stays 'pending' until admin approves
+                // Verification status is tracked in payment_details JSON
             });
 
             return redirect()->route('orders.show', $order)->with('success', 'Bukti pembayaran telah diunggah. Mohon tunggu verifikasi Admin.');

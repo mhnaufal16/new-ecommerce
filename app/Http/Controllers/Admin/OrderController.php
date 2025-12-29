@@ -104,15 +104,20 @@ class OrderController extends Controller
     }
     public function approvePayment(Order $order)
     {
-        $payment = $order->payments()->where('verification_status', 'pending')->latest()->first();
+        $payment = $order->payments()->where('transaction_status', 'pending')->latest()->first();
 
-        if (!$payment) {
+        if (!$payment || !isset($payment->payment_details['verification_status'])) {
             return back()->with('error', 'Bukti pembayaran tidak ditemukan.');
         }
 
         \DB::transaction(function () use ($order, $payment) {
+            // Update payment details JSON
+            $details = $payment->payment_details ?? [];
+            $details['verification_status'] = 'verified';
+            $details['verified_at'] = now()->toDateTimeString();
+            
             $payment->update([
-                'verification_status' => 'verified',
+                'payment_details' => $details,
                 'transaction_status' => 'settlement',
                 'paid_at' => now(),
             ]);
@@ -133,20 +138,23 @@ class OrderController extends Controller
             'reason' => 'required|string|max:255',
         ]);
 
-        $payment = $order->payments()->where('verification_status', 'pending')->latest()->first();
+        $payment = $order->payments()->where('transaction_status', 'pending')->latest()->first();
 
-        if (!$payment) {
+        if (!$payment || !isset($payment->payment_details['verification_status'])) {
             return back()->with('error', 'Bukti pembayaran tidak ditemukan.');
         }
 
+        // Update payment details JSON
+        $details = $payment->payment_details ?? [];
+        $details['verification_status'] = 'rejected';
+        $details['rejection_reason'] = $request->reason;
+        $details['rejected_at'] = now()->toDateTimeString();
+        
         $payment->update([
-            'verification_status' => 'rejected',
-            'rejection_reason' => $request->reason,
+            'payment_details' => $details,
         ]);
 
-        $order->update([
-            'payment_status' => 'pending', // Revert to pending
-        ]);
+        // Order payment_status stays 'pending'
 
         return back()->with('warning', 'Pembayaran ditolak.');
     }

@@ -92,7 +92,7 @@ class ProductsSeeder extends Seeder
                 'brand_id' => 1, // Samsung
                 'short_description' => 'Smartphone flagship Samsung dengan kamera terbaik',
                 'description' => '<p>Smartphone Samsung Galaxy S23 dengan spesifikasi tinggi.</p><ul><li>Layar 6.1" Dynamic AMOLED</li><li>Prosesor Snapdragon 8 Gen 2</li><li>Kamera 50MP + 12MP + 10MP</li><li>Baterai 3900mAh</li><li>Android 13</li></ul>',
-                'specifications' => json_encode([
+                'specifications' => [
                     'layar' => '6.1" Dynamic AMOLED',
                     'prosesor' => 'Snapdragon 8 Gen 2',
                     'ram' => '8GB',
@@ -101,7 +101,7 @@ class ProductsSeeder extends Seeder
                     'kamera_belakang' => '50MP + 12MP + 10MP',
                     'baterai' => '3900mAh',
                     'os' => 'Android 13',
-                ]),
+                ],
                 'type' => 'simple',
                 'status' => 'active',
                 'is_featured' => true,
@@ -113,13 +113,13 @@ class ProductsSeeder extends Seeder
                 'brand_id' => 9, // Erigo
                 'short_description' => 'Kaos premium dari Erigo dengan bahan katun combed',
                 'description' => '<p>Kaos Erigo dengan kualitas terbaik.</p><ul><li>Bahan: Cotton Combed 30s</li><li>Sablon: Plastisol</li><li>Lengan pendek</li><li>Neck Rib</li><li>Made in Indonesia</li></ul>',
-                'specifications' => json_encode([
+                'specifications' => [
                     'bahan' => 'Cotton Combed 30s',
                     'jenis_sablon' => 'Plastisol',
                     'panjang_lengan' => 'Pendek',
                     'leher' => 'Rib',
                     'asal_produksi' => 'Indonesia',
-                ]),
+                ],
                 'type' => 'configurable',
                 'status' => 'active',
                 'is_featured' => true,
