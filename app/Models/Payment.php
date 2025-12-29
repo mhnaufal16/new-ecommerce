@@ -16,6 +16,9 @@ class Payment extends Model
         'fee',
         'currency',
         'payment_details',
+        'proof_of_payment',
+        'verification_status',
+        'rejection_reason',
         'paid_at',
     ];
 

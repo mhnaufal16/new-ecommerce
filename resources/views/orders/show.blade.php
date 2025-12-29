@@ -178,14 +178,39 @@
                     @endphp
                     <div class="fs-4 fw-bold text-{{ $pColor }} mb-3">{{ strtoupper($order->payment_status) }}</div>
                     
+                    @php
+                        $payment = $order->payments()->latest()->first();
+                    @endphp
+
                     @if($order->payment_status === 'pending')
                     <div class="alert alert-warning border-0 small mb-0 rounded-4 shadow-sm text-start">
                         <i class="fas fa-info-circle me-2"></i> Silakan selesaikan pembayaran agar pesanan Anda dapat segera kami proses.
                     </div>
                     <a href="{{ route('orders.pay', $order) }}" class="btn btn-primary w-100 rounded-pill py-3 fw-bold mt-4 shadow-sm">Bayar Sekarang</a>
-                    @else
+                    
+                    @elseif($order->payment_status === 'waiting_verification')
+                    <div class="alert alert-info border-0 small mb-0 rounded-4 shadow-sm text-start">
+                        <i class="fas fa-clock me-2"></i> Bukti transfer sudah kami terima dan sedang dalam antrean verifikasi Admin. Mohon ditunggu ya!
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-light w-100 rounded-pill py-2 border small" type="button" data-bs-toggle="collapse" data-bs-target="#viewProof">
+                            <i class="fas fa-eye me-1"></i> Lihat Bukti Saya
+                        </button>
+                        <div class="collapse mt-2" id="viewProof">
+                            <img src="{{ asset('storage/' . ($payment->proof_of_payment ?? '')) }}" class="img-fluid rounded-3 border">
+                        </div>
+                    </div>
+
+                    @elseif($payment && $payment->verification_status === 'rejected')
+                    <div class="alert alert-danger border-0 small mb-0 rounded-4 shadow-sm text-start">
+                        <div class="fw-bold mb-1"><i class="fas fa-exclamation-triangle me-2"></i>Pembayaran Ditolak</div>
+                        <p class="mb-0">Alasan: {{ $payment->rejection_reason }}</p>
+                    </div>
+                    <a href="{{ route('orders.pay', $order) }}" class="btn btn-outline-danger w-100 rounded-pill py-3 fw-bold mt-4 shadow-sm">Re-upload Bukti Baru</a>
+
+                    @elseif($order->payment_status === 'paid')
                     <div class="alert alert-success border-0 small mb-0 rounded-4 shadow-sm text-start">
-                        <i class="fas fa-check-circle me-2"></i> Pembayaran berhasil dilakukan pada {{ $order->updated_at->format('d M Y, H:i') }}.
+                        <i class="fas fa-check-circle me-2"></i> Pembayaran berhasil diverifikasi pada {{ $order->updated_at->format('d M Y, H:i') }}.
                     </div>
 
                         @if($order->status !== 'completed' && $order->shipping_status === 'shipped')

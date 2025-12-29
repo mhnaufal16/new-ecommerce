@@ -72,13 +72,29 @@
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-secondary w-100 rounded-pill py-3 fw-bold">Lihat Detail Pesanan</a>
-                        </div>
-                        <div class="col-md-6">
-                            <form action="{{ route('orders.confirm-payment', $order) }}" method="POST">
+                        <div class="col-md-12">
+                            <form action="{{ route('orders.confirm-payment', $order) }}" method="POST" enctype="multipart/form-data" class="text-start">
                                 @csrf
-                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">Konfirmasi Pembayaran</button>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold"><i class="fas fa-camera me-2"></i>Unggah Bukti Transfer <span class="text-danger">*</span></label>
+                                    <div class="p-4 border-2 border-dashed rounded-4 text-center bg-light" id="drop-area">
+                                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                        <p class="small text-muted mb-3">Klik atau seret foto bukti transfer ke sini</p>
+                                        <input type="file" name="payment_proof" id="payment_proof" class="form-control" accept="image/*" required>
+                                        <div id="preview" class="mt-3 d-none">
+                                            <img src="" class="img-thumbnail" style="max-height: 200px;">
+                                        </div>
+                                    </div>
+                                    <p class="x-small text-muted mt-2">Maksimal 2MB (JPG, PNG, JPEG)</p>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-secondary w-100 rounded-pill py-3 fw-bold">Kembali</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">Konfirmasi & Kirim</button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>

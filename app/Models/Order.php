@@ -207,6 +207,7 @@ class Order extends Model
     {
         $labels = [
             'pending' => 'Menunggu Pembayaran',
+            'waiting_verification' => 'Sedang Diverifikasi',
             'paid' => 'Lunas',
             'partially_paid' => 'Sebagian Dibayar',
             'refunded' => 'Dikembalikan',

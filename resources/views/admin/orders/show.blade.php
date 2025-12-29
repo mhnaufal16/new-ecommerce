@@ -211,6 +211,46 @@
                 </div>
             </div>
 
+            <!-- Payment Proof Section -->
+            @php $pendingPayment = $order->payments()->where('verification_status', 'pending')->latest()->first(); @endphp
+            @if($pendingPayment && $pendingPayment->proof_of_payment)
+            <div class="card border-0 shadow-premium rounded-4 overflow-hidden mb-4">
+                <div class="card-header bg-white py-4 px-4 border-0">
+                    <h5 class="mb-0 fw-bold text-warning"><i class="fas fa-file-invoice-dollar me-2"></i>Verifikasi Bukti Transfer</h5>
+                </div>
+                <div class="card-body p-4 pt-0 text-center">
+                    <div class="mb-3 border rounded-4 p-2 bg-light">
+                        <img src="{{ asset('storage/' . $pendingPayment->proof_of_payment) }}" class="img-fluid rounded-3" style="max-height: 400px; cursor: pointer;" onclick="window.open(this.src)">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <form action="{{ route('admin.orders.approve-payment', $order) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold">
+                                <i class="fas fa-check-circle me-1"></i> Setujui Pembayaran
+                            </button>
+                        </form>
+                        
+                        <button type="button" class="btn btn-outline-danger w-100 rounded-pill fw-bold" data-bs-toggle="collapse" data-bs-target="#rejectCollapse">
+                            <i class="fas fa-times-circle me-1"></i> Tolak Pembayaran
+                        </button>
+                        
+                        <div class="collapse mt-3" id="rejectCollapse">
+                            <form action="{{ route('admin.orders.reject-payment', $order) }}" method="POST" class="p-3 bg-light rounded-4 border">
+                                @csrf
+                                @method('PATCH')
+                                <div class="mb-3 text-start">
+                                    <label class="form-label small fw-bold">Alasan Penolakan</label>
+                                    <textarea name="reason" class="form-control form-control-sm rounded-3" rows="2" placeholder="Contoh: Nominal tidak sesuai, gambar tidak jelas" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-sm rounded-pill w-100 fw-bold">Kirim Penolakan</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- Customer Stats (Mini Card) -->
             <div class="card border-0 shadow-premium rounded-4 overflow-hidden">
                 <div class="card-header bg-white py-4 px-4 border-0">

@@ -66,8 +66,12 @@ class OrderController extends Controller
     /**
      * Confirm the payment for the order.
      */
-    public function confirmPayment(string $id)
+    public function confirmPayment(Request $request, string $id)
     {
+        $request->validate([
+            'payment_proof' => 'required|image|max:2048',
+        ]);
+
         $order = Auth::user()->orders()->with('payments')->findOrFail($id);
 
         if ($order->payment_status === 'paid') {
@@ -76,28 +80,31 @@ class OrderController extends Controller
 
         $payment = $order->payments()->where('transaction_status', 'pending')->latest()->first();
 
-        DB::transaction(function () use ($order, $payment) {
-            // Update Payment record
-            if ($payment) {
-                $payment->update([
-                    'transaction_status' => 'settlement',
-                    'paid_at' => now(),
-                    'payment_details' => array_merge($payment->payment_details ?? [], [
-                        'confirmed_via' => 'manual_confirmation_button',
-                        'confirmed_at' => now()->toDateTimeString(),
-                    ])
+        if ($request->hasFile('payment_proof')) {
+            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+
+            DB::transaction(function () use ($order, $payment, $path) {
+                // Update Payment record
+                if ($payment) {
+                    $payment->update([
+                        'proof_of_payment' => $path,
+                        'verification_status' => 'pending',
+                        'payment_details' => array_merge($payment->payment_details ?? [], [
+                            'uploaded_at' => now()->toDateTimeString(),
+                        ])
+                    ]);
+                }
+
+                // Update Order record
+                $order->update([
+                    'payment_status' => 'waiting_verification',
                 ]);
-            }
+            });
 
-            // Update Order record
-            $order->update([
-                'payment_status' => 'paid',
-                'status' => 'processing', // Move to processing after payment
-                'total_paid' => $order->grand_total
-            ]);
-        });
+            return redirect()->route('orders.show', $order)->with('success', 'Bukti pembayaran telah diunggah. Mohon tunggu verifikasi Admin.');
+        }
 
-        return redirect()->route('orders.show', $order)->with('success', 'Pembayaran Anda telah berhasil dikonfirmasi!');
+        return back()->with('error', 'Gagal mengunggah bukti pembayaran.');
     }
 
     /**

@@ -102,4 +102,52 @@ class OrderController extends Controller
 
         return back()->with('success', 'Shipping status updated successfully.');
     }
+    public function approvePayment(Order $order)
+    {
+        $payment = $order->payments()->where('verification_status', 'pending')->latest()->first();
+
+        if (!$payment) {
+            return back()->with('error', 'Bukti pembayaran tidak ditemukan.');
+        }
+
+        \DB::transaction(function () use ($order, $payment) {
+            $payment->update([
+                'verification_status' => 'verified',
+                'transaction_status' => 'settlement',
+                'paid_at' => now(),
+            ]);
+
+            $order->update([
+                'payment_status' => 'paid',
+                'status' => 'processing',
+                'total_paid' => $order->grand_total,
+            ]);
+        });
+
+        return back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
+    }
+
+    public function rejectPayment(Request $request, Order $order)
+    {
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $payment = $order->payments()->where('verification_status', 'pending')->latest()->first();
+
+        if (!$payment) {
+            return back()->with('error', 'Bukti pembayaran tidak ditemukan.');
+        }
+
+        $payment->update([
+            'verification_status' => 'rejected',
+            'rejection_reason' => $request->reason,
+        ]);
+
+        $order->update([
+            'payment_status' => 'pending', // Revert to pending
+        ]);
+
+        return back()->with('warning', 'Pembayaran ditolak.');
+    }
 }
