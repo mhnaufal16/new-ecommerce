@@ -89,7 +89,14 @@
                     <span class="fw-bold">Pengaturan</span>
                 </a>
             </div>
-        </div>
+                
+                <div class="my-3 border-top opacity-50"></div>
+                
+                <a href="{{ route('logout') }}" class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center text-danger bg-transparent w-100">
+                    <div class="nav-icon-box me-3 bg-danger bg-opacity-10 text-danger"><i class="fas fa-sign-out-alt"></i></div>
+                    <span class="fw-bold">Keluar</span>
+                </a>
+            </div>
     </div>
 </div>
 
