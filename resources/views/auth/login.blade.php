@@ -37,10 +37,13 @@
                 </a>
             @endif
         </div>
-        <div class="input-group">
+        <div class="input-group" x-data="{ show: false }">
             <span class="input-group-text border-end-0"><i class="fas fa-lock"></i></span>
-            <input type="password" class="form-control border-start-0 @error('password') is-invalid @enderror" 
+            <input :type="show ? 'text' : 'password'" class="form-control border-start-0 border-end-0 @error('password') is-invalid @enderror" 
                    id="password" name="password" placeholder="••••••••" required>
+            <button type="button" class="input-group-text bg-transparent border-start-0 cursor-pointer" @click="show = !show" style="cursor: pointer;">
+                <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
         </div>
         @error('password')
             <div class="invalid-feedback d-block mt-1 x-small fw-bold">{{ $message }}</div>
