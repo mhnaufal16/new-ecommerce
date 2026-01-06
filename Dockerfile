@@ -27,7 +27,7 @@ COPY . /var/www/html
 
 # Install dependencies
 RUN composer install --optimize-autoloader --no-dev --no-interaction
-RUN npm ci --only=production && npm run build && npm cache clean --force
+RUN npm ci && npm run build && rm -rf node_modules && npm ci --only=production && npm cache clean --force
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
