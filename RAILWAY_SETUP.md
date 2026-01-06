@@ -12,7 +12,7 @@ Buka Railway Dashboard → Pilih service Laravel Anda → **Variables** tab
 # Application
 APP_NAME="Ecommerce Store"
 APP_ENV=production
-APP_KEY=base64:COPY_DARI_COMMAND_DIBAWAH
+APP_KEY=base64/6i+IVnAz/kC2uPOKu6usOTHwZPnhiW2+VcbGwWQUMk=
 APP_DEBUG=false
 APP_URL=https://web-production-da7ed.up.railway.app
 
