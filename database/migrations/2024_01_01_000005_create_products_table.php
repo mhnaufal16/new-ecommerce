@@ -34,7 +34,7 @@ return new class extends Migration
             $table->index(['slug']);
             $table->index(['status']);
             $table->index(['sku']);
-            $table->fullText(['name', 'short_description', 'description']);
+            // $table->fullText(['name', 'short_description', 'description']); // Disabled for Railway compatibility
         });
     }
 
