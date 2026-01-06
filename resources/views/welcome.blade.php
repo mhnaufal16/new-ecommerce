@@ -21,8 +21,8 @@
             </div>
             <div class="col-lg-6 text-center">
                 <div class="position-relative d-inline-block">
-                    <img src="https://img.freepik.com/free-photo/pretty-young-stylish-woman-holding-shopping-bags_23-2149101150.jpg?t=st=1710000000~exp=1710003600~hmac=55555" 
-                         alt="Hero Image" class="img-fluid rounded-4 shadow-lg mb-4" style="max-height: 500px; object-fit: cover; border: 10px solid rgba(255,255,255,0.1);">
+                    <img src="{{ asset('images/hero-ecommerce.png') }}" 
+                         alt="Happy Shoppers" class="img-fluid rounded-4 shadow-lg mb-4" style="max-height: 500px; object-fit: cover; border: 10px solid rgba(255,255,255,0.1);">
                     <div class="position-absolute bottom-0 start-0 bg-white p-3 rounded-4 shadow-lg text-dark m-4 d-none d-md-block">
                         <div class="d-flex align-items-center">
                             <div class="bg-success bg-opacity-10 p-2 rounded-circle me-3">
