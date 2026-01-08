@@ -28,6 +28,14 @@ if (!$appKey) {
     exit;
 }
 
+if (strpos($appKey, 'base64/') === 0) {
+    echo "<h1>Configuration Error</h1>";
+    echo "<p><strong>Invalid APP_KEY format detected!</strong></p>";
+    echo "<p>It looks like you used <code>base64/</code> (with a slash). It <strong>MUST</strong> be <code>base64:</code> (with a colon).</p>";
+    echo "<p>Please fix this in Vercel Settings > Environment Variables then <strong>Redeploy</strong>.</p>";
+    exit;
+}
+
 try {
     // Check for database existence if using sqlite
     if (getenv('DB_CONNECTION') === 'sqlite' || !getenv('DB_CONNECTION')) {
