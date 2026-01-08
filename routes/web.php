@@ -139,6 +139,7 @@ Route::middleware('auth')->group(function () {
     // Location helpers (used by profile address form)
     Route::get('/locations/cities', [\App\Http\Controllers\LocationController::class, 'cities'])->name('locations.cities');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/addresses', [ProfileController::class, 'addresses'])->name('profile.addresses');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     

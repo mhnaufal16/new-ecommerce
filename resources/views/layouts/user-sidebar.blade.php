@@ -56,15 +56,15 @@
                 </a>
 
                 @if($user->type !== 'admin')
-                <a href="{{ route('profile.edit') }}#addresses" 
-                   class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->url() == route('profile.edit') && request()->hash == '#addresses' ? 'active shadow-sm' : '' }}">
+                <a href="{{ route('profile.addresses') }}" 
+                   class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->routeIs('profile.addresses') ? 'active shadow-sm' : '' }}">
                     <div class="nav-icon-box me-3"><i class="fas fa-map-marker-alt"></i></div>
                     <span class="fw-bold">Alamat</span>
                 </a>
                 @endif
 
                 <a href="{{ route('profile.edit') }}#security" 
-                   class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->url() == route('profile.edit') && request()->hash == '#security' ? 'active shadow-sm' : '' }}">
+                   class="list-group-item list-group-item-action mb-2 rounded-3 border-0 d-flex align-items-center {{ request()->url() == route('profile.edit') && !request()->routeIs('profile.addresses') && str_contains(request()->url(), '#security') ? 'active shadow-sm' : '' }}">
                     <div class="nav-icon-box me-3"><i class="fas fa-lock"></i></div>
                     <span class="fw-bold">Ganti Password</span>
                 </a>

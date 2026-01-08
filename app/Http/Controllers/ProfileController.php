@@ -22,6 +22,16 @@ class ProfileController extends Controller
     }
 
     /**
+     * Display the user's addresses.
+     */
+    public function addresses(Request $request): View
+    {
+        return view('profile.addresses', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    /**
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
@@ -66,7 +76,7 @@ class ProfileController extends Controller
 
         $address->delete();
 
-        return Redirect::route('profile.edit')->with('success', 'Alamat berhasil dihapus.');
+        return Redirect::route('profile.addresses')->with('success', 'Alamat berhasil dihapus.');
     }
 
     public function storeAddress(Request $request): RedirectResponse
@@ -93,7 +103,7 @@ class ProfileController extends Controller
             'is_primary' => $isFirst,
         ]));
 
-        return Redirect::route('profile.edit')->with('success', 'Alamat berhasil ditambahkan.');
+        return Redirect::route('profile.addresses')->with('success', 'Alamat berhasil ditambahkan.');
     }
 
     public function setPrimaryAddress(Request $request, \App\Models\UserAddress $address): RedirectResponse
@@ -104,6 +114,6 @@ class ProfileController extends Controller
 
         $address->makePrimary();
 
-        return Redirect::route('profile.edit')->with('success', 'Alamat utama berhasil diperbarui.');
+        return Redirect::route('profile.addresses')->with('success', 'Alamat utama berhasil diperbarui.');
     }
 }
