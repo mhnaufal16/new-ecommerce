@@ -31,7 +31,14 @@ if (!$appKey) {
 try {
     // Check for database existence if using sqlite
     if (getenv('DB_CONNECTION') === 'sqlite' || !getenv('DB_CONNECTION')) {
-        $dbPath = getenv('DB_DATABASE') ?: __DIR__ . '/../database/database.sqlite';
+        $dbPath = getenv('DB_DATABASE');
+        if (!$dbPath) {
+            $dbPath = realpath(__DIR__ . '/../database/database.sqlite');
+            if (!$dbPath) {
+                $dbPath = __DIR__ . '/../database/database.sqlite';
+            }
+        }
+        
         if (!file_exists($dbPath)) {
             // Try to create an empty one in /tmp if we can't find it
             // but Laravel usually expects it in the specified path.
