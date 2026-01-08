@@ -17,8 +17,9 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })->create();
 
-if (env('APP_STORAGE')) {
-    $app->useStoragePath(env('APP_STORAGE'));
+// Vercel fix: allow overriding storage path via environment variable
+if ($storagePath = env('APP_STORAGE')) {
+    $app->useStoragePath($storagePath);
 }
 
 return $app;
