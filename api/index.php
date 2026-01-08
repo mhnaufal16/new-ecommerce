@@ -19,9 +19,12 @@ if (!is_dir($storagePath)) {
 
 putenv('APP_STORAGE=' . $storagePath);
 
-if (!getenv('APP_KEY')) {
+$appKey = getenv('APP_KEY') ?: ($_ENV['APP_KEY'] ?? ($_SERVER['APP_KEY'] ?? null));
+
+if (!$appKey) {
     echo "<h1>Configuration Error</h1>";
-    echo "<p><strong>APP_KEY is not set.</strong> Please add it to your Vercel Environment Variables.</p>";
+    echo "<p><strong>APP_KEY is not set.</strong></p>";
+    echo "<p>Vercel environment variables are only available after a <strong>Redeploy</strong>. Please go to the 'Deployments' tab and redeploy the latest version.</p>";
     exit;
 }
 
