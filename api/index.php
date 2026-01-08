@@ -20,10 +20,18 @@ if (!is_dir($storagePath)) {
 // Set environment variables for storage override
 putenv('APP_STORAGE=' . $storagePath);
 
+if (!env('APP_KEY')) {
+    echo "<h1>Configuration Error</h1>";
+    echo "<p><strong>APP_KEY is not set.</strong> Please add it to your Vercel Environment Variables.</p>";
+    exit;
+}
+
 try {
     require __DIR__ . '/../public/index.php';
-} catch (\Exception $e) {
-    echo "<h1>Laravel Boot Error</h1>";
-    echo "<p>" . $e->getMessage() . "</p>";
+} catch (\Throwable $e) {
+    echo "<h1>Laravel Boot Error (Captured)</h1>";
+    echo "<p><strong>Message:</strong> " . $e->getMessage() . "</p>";
+    echo "<p><strong>File:</strong> " . $e->getFile() . " on line " . $e->getLine() . "</p>";
+    echo "<h3>Stack Trace:</h3>";
     echo "<pre>" . $e->getTraceAsString() . "</pre>";
 }
