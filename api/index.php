@@ -17,10 +17,9 @@ if (!is_dir($storagePath)) {
     mkdir($storagePath . '/logs', 0755, true);
 }
 
-// Set environment variables for storage override
 putenv('APP_STORAGE=' . $storagePath);
 
-if (!env('APP_KEY')) {
+if (!getenv('APP_KEY')) {
     echo "<h1>Configuration Error</h1>";
     echo "<p><strong>APP_KEY is not set.</strong> Please add it to your Vercel Environment Variables.</p>";
     exit;
