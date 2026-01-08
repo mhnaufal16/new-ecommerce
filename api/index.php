@@ -19,6 +19,17 @@ if (!is_dir($storagePath)) {
 
 putenv('APP_STORAGE=' . $storagePath);
 
+// Diagnostics for Vercel
+if (isset($_GET['diagnose'])) {
+    echo "<h1>Vercel PHP Diagnostics</h1>";
+    echo "PHP Version: " . PHP_VERSION . "<br>";
+    echo "CWD: " . getcwd() . "<br>";
+    echo "Extensions: " . implode(', ', get_loaded_extensions()) . "<br>";
+    echo "Vendor Autoload exists: " . (file_exists(__DIR__ . '/../vendor/autoload.php') ? 'Yes' : 'No') . "<br>";
+    echo "Storage Writable: " . (is_writable($storagePath) ? 'Yes' : 'No') . "<br>";
+    exit;
+}
+
 $appKey = getenv('APP_KEY') ?: ($_ENV['APP_KEY'] ?? ($_SERVER['APP_KEY'] ?? null));
 
 if (!$appKey) {
